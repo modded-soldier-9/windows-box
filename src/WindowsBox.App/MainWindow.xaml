@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="WindowsBox.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:pages="using:WindowsBox.App.Pages"
+    Title="Windows Box">
+
+    <Grid>
+        <NavigationView
+            x:Name="RootNav"
+            PaneDisplayMode="Left"
+            IsSettingsVisible="False"
+            IsBackButtonVisible="Collapsed"
+            OpenPaneLength="220"
+            SelectionChanged="RootNav_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home" Tag="home" Icon="Home" />
+                <NavigationViewItem Content="Services" Tag="services" Icon="Setting" />
+                <NavigationViewItem Content="Software" Tag="software" Icon="Shop" />
+                <NavigationViewItem Content="Privacy" Tag="privacy" Icon="Permissions" />
+                <NavigationViewItem Content="Startup" Tag="startup" Icon="Play" />
+                <NavigationViewItem Content="Tweaks" Tag="tweaks" Icon="Edit" />
+                <NavigationViewItem Content="History" Tag="history" Icon="Clock" />
+            </NavigationView.MenuItems>
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
+</Window>

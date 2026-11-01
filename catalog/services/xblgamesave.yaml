@@ -1,0 +1,35 @@
+schema_version: 1
+id: svc.xblgamesave
+area: services
+name: XblGameSave
+display: Xbox Live Game Save
+category: gaming
+description: Xbox cloud game saves.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  office: Manual
+  balanced: Manual
+depends_on:
+  - XblAuthManager
+dependents: []
+breaks:
+  - Xbox cloud saves
+gates:
+  not:
+    - xbox_or_gamepass
+profiles:
+  - minimal
+  - office
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

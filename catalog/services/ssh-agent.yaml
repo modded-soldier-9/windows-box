@@ -1,0 +1,29 @@
+schema_version: 1
+id: svc.ssh-agent
+area: services
+name: ssh-agent
+display: OpenSSH Authentication Agent
+category: virtualization
+description: Holds OpenSSH private keys in memory.
+defaults:
+  pro: Disabled
+  home: Disabled
+  enterprise: Disabled
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: true
+touch_policy: allow
+recommend:
+  developer: Manual
+depends_on: []
+dependents: []
+breaks: []
+gates: {}
+profiles:
+  - developer
+alternatives: []
+notes: Offer Automatic for developer profile on request; default recommend Manual when enabling.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

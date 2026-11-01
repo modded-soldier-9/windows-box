@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.scardsvr
+area: services
+name: SCardSvr
+display: Smart Card
+category: hardware
+description: Smart card reader support.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Disabled
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Smart card login
+gates:
+  not:
+    - domain_joined
+profiles:
+  - minimal
+alternatives: []
+notes: Risk 4 on enterprise smart-card environments — leave then.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

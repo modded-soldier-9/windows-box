@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.sensordataservice
+area: services
+name: SensorDataService
+display: Sensor Data Service
+category: hardware
+description: Delivers sensor data to apps.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  gamer: Manual
+depends_on: []
+dependents: []
+breaks:
+  - App sensor APIs
+gates:
+  not:
+    - laptop_or_tablet
+profiles:
+  - gamer
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

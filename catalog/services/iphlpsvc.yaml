@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.iphlpsvc
+area: services
+name: iphlpsvc
+display: IP Helper
+category: network
+description: IPv6 transition technologies (Teredo, 6to4, IP-HTTPS).
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Teredo/IPv6 transition
+  - Xbox Teredo NAT
+gates: {}
+profiles:
+  - minimal
+alternatives: []
+notes: Gamers using Xbox networking may need Teredo — leave for gamer profile.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://www.elevenforum.com/tutorials/"

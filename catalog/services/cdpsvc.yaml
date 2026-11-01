@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.cdpsvc
+area: services
+name: CDPSvc
+display: Connected Devices Platform Service
+category: privacy
+description: Phone Link, nearby sharing, timeline; also Night light / settings sync glue.
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: AutomaticDelayed
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Night light
+  - Nearby sharing
+  - Phone Link
+  - Notification sync
+gates: {}
+profiles: []
+alternatives: []
+notes: Known breakage of Night light and notifications when disabled — leave by default.
+sources:
+  - "https://www.elevenforum.com/tutorials/"
+  - "https://github.com/ChrisTitusTech/winutil"

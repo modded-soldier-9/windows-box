@@ -1,0 +1,40 @@
+schema_version: 1
+id: svc.spooler
+area: services
+name: Spooler
+display: Print Spooler
+category: hardware
+description: Printing and virtual PDF printers.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  privacy: Manual
+  balanced: Manual
+depends_on:
+  - RpcSs
+  - HTTP
+dependents:
+  - PrintNotify
+breaks:
+  - Printing
+  - PDF printers
+gates:
+  not:
+    - printer_installed
+profiles:
+  - minimal
+  - privacy
+alternatives: []
+notes: Also PrintNightmare hardening surface; Disable only when no printers.
+sources:
+  - "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527"
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

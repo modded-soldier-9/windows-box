@@ -1,0 +1,36 @@
+schema_version: 1
+id: svc.dps
+area: services
+name: DPS
+display: Diagnostic Policy Service
+category: telemetry
+description: Problem detection and troubleshooting; feeds SRUM.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  minimal: Manual
+  balanced: Manual
+depends_on: []
+dependents:
+  - WdiServiceHost
+  - WdiSystemHost
+breaks:
+  - Automatic troubleshooting
+  - Some SRUM-dependent diagnostics
+gates: {}
+profiles:
+  - privacy
+  - minimal
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

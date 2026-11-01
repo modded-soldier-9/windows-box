@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.cscservice
+area: services
+name: CscService
+display: Offline Files
+category: performance
+description: Offline file cache (CSC).
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Disabled
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Offline Files sync
+gates:
+  not:
+    - domain_joined
+profiles:
+  - minimal
+alternatives: []
+notes: Risk 4 on domain with Offline Files mandatory — leave then.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

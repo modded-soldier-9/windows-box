@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.sysmain
+area: services
+name: SysMain
+display: SysMain
+category: performance
+description: Prefetch and memory compression tuning (Superfetch).
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  gamer: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Prefetch warming on HDD/low-RAM systems
+gates: {}
+profiles:
+  - gamer
+alternatives: []
+notes: Benefit of Manual on NVMe+32GB is unproven; leave on HDD/low RAM. Label claims as unproven.
+honesty_label: unproven
+sources:
+  - "https://github.com/ChrisTitusTech/winutil"
+  - "https://www.elevenforum.com/tutorials/"

@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.bthserv
+area: services
+name: bthserv
+display: Bluetooth Support Service
+category: hardware
+description: Bluetooth discovery and pairing support.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Bluetooth devices
+gates:
+  not:
+    - bluetooth_radio
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

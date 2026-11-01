@@ -1,0 +1,35 @@
+schema_version: 1
+id: svc.lfsvc
+area: services
+name: lfsvc
+display: Geolocation Service
+category: privacy
+description: Location for apps, Find my device, and automatic time zone.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - App location
+  - Find my device
+  - Automatic time zone
+gates:
+  hardware_any:
+    - desktop
+profiles:
+  - privacy
+alternatives: []
+notes: Risk is higher on laptops; prefer leave/Manual when battery/mobile.
+sources:
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"

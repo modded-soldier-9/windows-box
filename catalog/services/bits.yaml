@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.bits
+area: services
+name: BITS
+display: Background Intelligent Transfer Service
+category: performance
+description: Background downloads for Update and Store.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on:
+  - RpcSs
+  - EventSystem
+dependents: []
+breaks:
+  - Windows Update downloads
+  - Store downloads
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

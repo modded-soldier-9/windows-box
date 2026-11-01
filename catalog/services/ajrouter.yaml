@@ -1,0 +1,44 @@
+schema_version: 1
+id: svc.ajrouter
+area: services
+name: AJRouter
+display: AllJoyn Router Service
+category: network
+description: IoT AllJoyn router (deprecated).
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  gamer: Disabled
+  minimal: Disabled
+  office: Disabled
+  balanced: Disabled
+  laptop: Disabled
+  developer: Disabled
+  safe: Disabled
+depends_on: []
+dependents: []
+breaks:
+  - AllJoyn IoT apps
+gates: {}
+profiles:
+  - privacy
+  - gamer
+  - minimal
+  - office
+  - balanced
+  - laptop
+  - developer
+  - safe
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

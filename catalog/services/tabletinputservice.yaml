@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.tabletinputservice
+area: services
+name: TabletInputService
+display: Touch Keyboard and Handwriting Panel Service
+category: hardware
+description: Touch keyboard, handwriting; also emoji panel/IME glue on some builds.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Touch keyboard
+  - Emoji panel on some builds
+  - IME input
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://www.elevenforum.com/tutorials/"
+  - "https://github.com/ChrisTitusTech/winutil"

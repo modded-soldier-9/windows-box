@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.ssdpsrv
+area: services
+name: SSDPSRV
+display: SSDP Discovery
+category: network
+description: SSDP discovery for UPnP devices.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents:
+  - upnphost
+breaks:
+  - UPnP device discovery
+  - Some network printers
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

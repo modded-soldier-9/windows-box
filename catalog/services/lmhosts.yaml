@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.lmhosts
+area: services
+name: lmhosts
+display: TCP/IP NetBIOS Helper
+category: network
+description: NetBIOS name resolution helper.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - NetBIOS name resolution on legacy LAN
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

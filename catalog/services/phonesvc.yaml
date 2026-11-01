@@ -1,0 +1,29 @@
+schema_version: 1
+id: svc.phonesvc
+area: services
+name: PhoneSvc
+display: Phone Service
+category: hardware
+description: Telephony state for Phone Link and related features.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+  privacy: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Telephony state for Phone Link
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

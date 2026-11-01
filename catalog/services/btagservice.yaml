@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.btagservice
+area: services
+name: BTAGService
+display: Bluetooth Audio Gateway Service
+category: hardware
+description: Bluetooth headset audio gateway.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Bluetooth headsets
+gates:
+  not:
+    - bluetooth_radio
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

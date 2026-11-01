@@ -1,0 +1,27 @@
+schema_version: 1
+id: svc.frameservermonitor
+area: services
+name: FrameServerMonitor
+display: Windows Camera Frame Server Monitor
+category: hardware
+description: Monitors the camera frame server.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Webcam frame server monitoring
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

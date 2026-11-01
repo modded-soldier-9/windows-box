@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.mapsbroker
+area: services
+name: MapsBroker
+display: Downloaded Maps Manager
+category: privacy
+description: Manages offline maps downloads.
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: AutomaticDelayed
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  minimal: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Offline maps updates
+gates: {}
+profiles:
+  - privacy
+  - minimal
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

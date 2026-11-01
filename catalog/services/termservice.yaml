@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.termservice
+area: services
+name: TermService
+display: Remote Desktop Services
+category: network
+description: RDP host service (Pro+).
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents:
+  - UmRdpService
+  - SessionEnv
+breaks:
+  - Incoming Remote Desktop
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

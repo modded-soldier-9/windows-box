@@ -1,0 +1,37 @@
+schema_version: 1
+id: svc.xblauthmanager
+area: services
+name: XblAuthManager
+display: Xbox Live Auth Manager
+category: gaming
+description: Xbox Live sign-in authentication.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  office: Manual
+  balanced: Manual
+depends_on: []
+dependents:
+  - XblGameSave
+breaks:
+  - Xbox sign-in
+  - Game Pass PC auth
+gates:
+  not:
+    - xbox_or_gamepass
+profiles:
+  - minimal
+  - office
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/ChrisTitusTech/winutil"

@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.vmms
+area: services
+name: vmms
+display: Hyper-V Virtual Machine Management
+category: virtualization
+description: Hyper-V VM management service.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Hyper-V VM management
+gates: {}
+profiles:
+  - developer
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

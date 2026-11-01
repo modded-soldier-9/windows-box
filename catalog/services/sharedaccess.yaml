@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.sharedaccess
+area: services
+name: SharedAccess
+display: Internet Connection Sharing (ICS)
+category: network
+description: ICS; also used by Mobile Hotspot and some VM NAT.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Mobile Hotspot
+  - Some Hyper-V/VM NAT scenarios
+gates: {}
+profiles: []
+alternatives: []
+notes: WinUtil historically set Disabled which breaks hotspot — we keep Manual.
+sources:
+  - "https://github.com/ChrisTitusTech/winutil"
+  - "https://www.elevenforum.com/tutorials/"

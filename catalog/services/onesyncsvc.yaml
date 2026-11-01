@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.onesyncsvc
+area: services
+name: OneSyncSvc
+display: Sync Host
+category: privacy
+description: Mail, Calendar, and People sync host (per-user template).
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: AutomaticDelayed
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: true
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Mail/Calendar/People sync for Microsoft accounts
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+notes: Leave unless no Microsoft account is used. Edit template, not instance.
+sources:
+  - "https://learn.microsoft.com/windows/application-management/per-user-services-in-windows"
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"

@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.fdrespub
+area: services
+name: FDResPub
+display: Function Discovery Resource Publication
+category: network
+description: Publishes this computer and resources to the network.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Network discovery publication
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.bthavctpsvc
+area: services
+name: BthAvctpSvc
+display: AVCTP service
+category: hardware
+description: Bluetooth AVCTP transport.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Bluetooth AV media controls
+gates:
+  not:
+    - bluetooth_radio
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

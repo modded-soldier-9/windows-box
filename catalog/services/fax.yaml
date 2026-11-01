@@ -1,0 +1,45 @@
+schema_version: 1
+id: svc.fax
+area: services
+name: Fax
+display: Fax
+category: hardware
+description: Windows Fax service.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: true
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  gamer: Disabled
+  minimal: Disabled
+  office: Disabled
+  balanced: Disabled
+  laptop: Disabled
+  developer: Disabled
+  safe: Disabled
+depends_on:
+  - Spooler
+  - TapiSrv
+dependents: []
+breaks:
+  - Fax send/receive
+gates: {}
+profiles:
+  - privacy
+  - gamer
+  - minimal
+  - office
+  - balanced
+  - laptop
+  - developer
+  - safe
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.umrdpservice
+area: services
+name: UmRdpService
+display: Remote Desktop Services UserMode Port Redirector
+category: network
+description: RDP device/port redirection.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on:
+  - TermService
+dependents: []
+breaks:
+  - RDP redirects
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.semgrsvc
+area: services
+name: SEMgrSvc
+display: Payments and NFC/SE Manager
+category: hardware
+description: NFC payments and secure element manager.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - NFC payments
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

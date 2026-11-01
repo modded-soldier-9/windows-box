@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.wiarpc
+area: services
+name: WiaRpc
+display: Still Image Acquisition Events
+category: hardware
+description: Still image acquisition eventing for scanners/cameras.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Scanner/camera acquisition events
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
