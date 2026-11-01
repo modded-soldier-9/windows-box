@@ -47,7 +47,18 @@ public sealed class ServiceCatalogLoader
 
                 entries.Add(entry);
             }
-            catch (Exception ex) when (ex is not CatalogLoadException)
+            catch (CatalogLoadException ex)
+            {
+                if (ex.Errors.Count > 0)
+                {
+                    errors.AddRange(ex.Errors.Select(e => $"{Path.GetFileName(file)}: {e}"));
+                }
+                else
+                {
+                    errors.Add($"{Path.GetFileName(file)}: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
             {
                 errors.Add($"{Path.GetFileName(file)}: {ex.Message}");
             }

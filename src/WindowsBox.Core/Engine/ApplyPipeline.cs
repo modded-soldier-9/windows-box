@@ -37,13 +37,22 @@ public sealed class ApplyPipeline
         CatalogDocument catalog,
         OptimizationProfile profile,
         bool dryRun = false,
+        bool confirmHighRisk = false,
         IEnumerable<string>? onlyItemIds = null,
         CancellationToken cancellationToken = default)
     {
         var plan = _planner.Build(catalog, profile);
         var selected = onlyItemIds is null
-            ? plan.Changes
+            ? plan.Changes.ToList()
             : plan.Changes.Where(c => onlyItemIds.Contains(c.ItemId, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        if (!confirmHighRisk && selected.Any(c => c.RequiresConfirm))
+        {
+            var blocked = selected.Where(c => c.RequiresConfirm).Select(c => c.ItemId);
+            throw new InvalidOperationException(
+                "High-risk or Disabled changes require confirmHighRisk=true. Blocked: " +
+                string.Join(", ", blocked));
+        }
 
         var probe = _probe.Probe();
         var journalId = Guid.NewGuid().ToString("N");
@@ -92,6 +101,9 @@ public sealed class ApplyPipeline
             Notes = dryRun ? "dry-run" : null,
         };
 
+        // Snapshot first — undo must survive crash/cancel during apply.
+        await _journals.SaveAsync(journal, cancellationToken);
+
         if (dryRun)
         {
             foreach (var entry in entries)
@@ -119,14 +131,20 @@ public sealed class ApplyPipeline
                     delayedAutostart: entry.TargetDelayedAutostart);
                 entry.Status = JournalEntryStatus.Applied;
             }
+            catch (OperationCanceledException)
+            {
+                await _journals.SaveAsync(journal, CancellationToken.None);
+                throw;
+            }
             catch (Exception ex)
             {
                 entry.Status = JournalEntryStatus.Failed;
                 entry.Error = ex.Message;
             }
+
+            await _journals.SaveAsync(journal, cancellationToken);
         }
 
-        await _journals.SaveAsync(journal, cancellationToken);
         var health = _health.Run();
 
         return new ApplyResult
@@ -146,9 +164,20 @@ public sealed class ApplyPipeline
 
         foreach (var entry in journal.Entries)
         {
-            if (entry.Status is not (JournalEntryStatus.Applied or JournalEntryStatus.Failed))
+            if (entry.Status is not (JournalEntryStatus.Applied or JournalEntryStatus.Failed or JournalEntryStatus.Pending))
             {
                 continue;
+            }
+
+            // Pending means snapshot existed but apply never completed — restore priors anyway.
+            if (entry.Status == JournalEntryStatus.Pending)
+            {
+                var live = _services.GetConfig(entry.ServiceName);
+                if (live is null || Normalize(live) == entry.PriorStartType)
+                {
+                    entry.Status = JournalEntryStatus.RolledBack;
+                    continue;
+                }
             }
 
             try
@@ -169,6 +198,21 @@ public sealed class ApplyPipeline
 
         await _journals.SaveAsync(journal, cancellationToken);
         return journal;
+    }
+
+    private static ServiceStartType Normalize(ServiceConfig live)
+    {
+        if (live.StartType == ServiceStartType.Automatic && live.DelayedAutostart)
+        {
+            return ServiceStartType.AutomaticDelayed;
+        }
+
+        if (live.StartType == ServiceStartType.Manual && live.HasTriggers)
+        {
+            return ServiceStartType.ManualTrigger;
+        }
+
+        return live.StartType;
     }
 }
 

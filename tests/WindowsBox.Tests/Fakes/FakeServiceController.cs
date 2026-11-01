@@ -41,8 +41,13 @@ public sealed class FakeServiceController : IServiceController
 
     public IReadOnlyList<string> EnumerateServices() => _services.Keys.OrderBy(k => k).ToList();
 
+    /// <summary>Optional hook so tests can cancel mid-apply after snapshot.</summary>
+    public Action<string>? BeforeSetStartType { get; set; }
+
     public void SetStartType(string serviceName, ServiceStartType startType, bool delayedAutostart = false)
     {
+        BeforeSetStartType?.Invoke(serviceName);
+
         if (!_services.TryGetValue(serviceName, out var existing) || !existing.Exists)
         {
             throw new InvalidOperationException($"Service not found: {serviceName}");

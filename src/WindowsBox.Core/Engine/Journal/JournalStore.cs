@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace WindowsBox.Core.Engine.Journal;
 
@@ -12,7 +13,7 @@ public interface IJournalStore
     Task<IReadOnlyList<ApplyJournal>> ListAsync(CancellationToken cancellationToken = default);
 }
 
-public sealed class FileJournalStore : IJournalStore
+public sealed partial class FileJournalStore : IJournalStore
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -25,20 +26,27 @@ public sealed class FileJournalStore : IJournalStore
 
     public FileJournalStore(string rootDirectory)
     {
-        _root = rootDirectory;
+        _root = Path.GetFullPath(rootDirectory);
         Directory.CreateDirectory(_root);
     }
 
     public async Task SaveAsync(ApplyJournal journal, CancellationToken cancellationToken = default)
     {
-        var path = Path.Combine(_root, $"{journal.Id}.json");
-        await using var stream = File.Create(path);
-        await JsonSerializer.SerializeAsync(stream, journal, JsonOptions, cancellationToken);
+        var path = ResolveJournalPath(journal.Id);
+        var tempPath = path + ".tmp";
+
+        await using (var stream = File.Create(tempPath))
+        {
+            await JsonSerializer.SerializeAsync(stream, journal, JsonOptions, cancellationToken);
+            await stream.FlushAsync(cancellationToken);
+        }
+
+        File.Move(tempPath, path, overwrite: true);
     }
 
     public async Task<ApplyJournal?> LoadAsync(string journalId, CancellationToken cancellationToken = default)
     {
-        var path = Path.Combine(_root, $"{journalId}.json");
+        var path = ResolveJournalPath(journalId);
         if (!File.Exists(path))
         {
             return null;
@@ -64,4 +72,30 @@ public sealed class FileJournalStore : IJournalStore
 
         return list;
     }
+
+    private string ResolveJournalPath(string journalId)
+    {
+        if (string.IsNullOrWhiteSpace(journalId) || !SafeJournalId().IsMatch(journalId))
+        {
+            throw new ArgumentException(
+                "Journal id must be a 32-character lowercase hex Guid (N format).",
+                nameof(journalId));
+        }
+
+        var path = Path.GetFullPath(Path.Combine(_root, $"{journalId}.json"));
+        var rootWithSep = _root.EndsWith(Path.DirectorySeparatorChar)
+            ? _root
+            : _root + Path.DirectorySeparatorChar;
+
+        if (!path.StartsWith(rootWithSep, StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(Path.GetDirectoryName(path), _root, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ArgumentException("Journal path escapes the journal root.", nameof(journalId));
+        }
+
+        return path;
+    }
+
+    [GeneratedRegex("^[0-9a-f]{32}$")]
+    private static partial Regex SafeJournalId();
 }

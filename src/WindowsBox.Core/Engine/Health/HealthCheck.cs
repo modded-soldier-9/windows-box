@@ -47,17 +47,28 @@ public sealed class BasicHealthChecker : IHealthChecker
         foreach (var name in CriticalServices)
         {
             var cfg = _services.GetConfig(name);
-            var ok = cfg is { Exists: true } &&
-                     cfg.StartType is Catalog.Models.ServiceStartType.Automatic
-                         or Catalog.Models.ServiceStartType.AutomaticDelayed
-                         or Catalog.Models.ServiceStartType.Manual
-                         or Catalog.Models.ServiceStartType.ManualTrigger;
+            var ok = cfg is { Exists: true, StartType: Catalog.Models.ServiceStartType.Automatic
+                or Catalog.Models.ServiceStartType.AutomaticDelayed };
+
+            string detail;
+            if (ok)
+            {
+                detail = $"ok ({cfg!.StartType})";
+            }
+            else if (cfg is null || !cfg.Exists)
+            {
+                detail = "missing";
+            }
+            else
+            {
+                detail = $"unexpected start type {cfg.StartType}";
+            }
 
             items.Add(new HealthCheckItem
             {
                 Name = $"service:{name}",
                 Passed = ok,
-                Detail = ok ? "present" : "missing or unexpected",
+                Detail = detail,
             });
         }
 

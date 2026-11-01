@@ -67,6 +67,17 @@ public sealed class PreviewPlanner
                 continue;
             }
 
+            if (entry.PerUser)
+            {
+                skipped.Add(new PreviewSkip
+                {
+                    ItemId = entry.Id,
+                    ServiceName = entry.Name,
+                    Reason = "Per-user template (instance resolution lands in M1).",
+                });
+                continue;
+            }
+
             if (!entry.Recommend.TryGetValue(profile, out var target))
             {
                 skipped.Add(new PreviewSkip
@@ -209,6 +220,10 @@ public sealed class PreviewPlanner
         ServiceStartType target,
         CatalogDocument catalog)
     {
+        // M0: always block when any Automatic dependent exists.
+        // M1 may allow when that dependent is also moving away from Auto in the same plan.
+        _ = catalog;
+
         if (target is not (ServiceStartType.Manual or ServiceStartType.ManualTrigger or ServiceStartType.Disabled))
         {
             return false;
@@ -230,14 +245,6 @@ public sealed class PreviewPlanner
 
             if (depConfig.StartType is ServiceStartType.Automatic or ServiceStartType.AutomaticDelayed)
             {
-                // Allow if the dependent is itself being moved away from Auto in this catalog plan later —
-                // M0: conservative block.
-                var depEntry = catalog.FindByName(dependentName);
-                if (depEntry is null || depEntry.TouchPolicy == TouchPolicy.Never)
-                {
-                    return true;
-                }
-
                 return true;
             }
         }
