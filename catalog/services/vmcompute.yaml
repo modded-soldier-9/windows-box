@@ -1,0 +1,35 @@
+schema_version: 1
+id: svc.vmcompute
+area: services
+name: vmcompute
+display: Hyper-V Host Compute Service
+category: virtualization
+description: Hyper-V compute for VMs, WSL2, Sandbox, Docker.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Hyper-V
+  - WSL2
+  - Sandbox
+  - Docker
+gates:
+  feature_any:
+    - Microsoft-Hyper-V
+    - Microsoft-Windows-Subsystem-Linux
+profiles:
+  - developer
+alternatives: []
+notes: Never disable on developer profile when Hyper-V/WSL is in use.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.remoteaccess
+area: services
+name: RemoteAccess
+display: Routing and Remote Access
+category: network
+description: Routing and remote access (RRAS).
+defaults:
+  pro: Disabled
+  home: Disabled
+  enterprise: Disabled
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Disabled
+  safe: Disabled
+depends_on: []
+dependents: []
+breaks:
+  - RRAS routing
+gates: {}
+profiles:
+  - safe
+alternatives: []
+notes: Keep Disabled (already default).
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

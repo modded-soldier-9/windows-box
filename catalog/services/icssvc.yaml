@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.icssvc
+area: services
+name: icssvc
+display: Windows Mobile Hotspot Service
+category: hardware
+description: Mobile hotspot sharing.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Mobile hotspot
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

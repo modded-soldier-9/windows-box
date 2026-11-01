@@ -1,0 +1,27 @@
+schema_version: 1
+id: svc.unistoresvc
+area: services
+name: UnistoreSvc
+display: User Data Storage
+category: privacy
+description: User data storage for contacts/mail (per-user template).
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: true
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Contacts/People apps
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows/application-management/per-user-services-in-windows"

@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.waasmedicsvc
+area: services
+name: WaaSMedicSvc
+display: Windows Update Medic Service
+category: updates
+description: Repairs Windows Update components; re-enables tampering.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: true
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Update self-repair
+gates: {}
+profiles: []
+alternatives: []
+notes: Protected (TrustedInstaller/PPL). Never take ownership.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

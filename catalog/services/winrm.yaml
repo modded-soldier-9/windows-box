@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.winrm
+area: services
+name: WinRM
+display: Windows Remote Management (WS-Management)
+category: network
+description: PowerShell remoting and WS-Management.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+  privacy: Manual
+depends_on: []
+dependents: []
+breaks:
+  - PowerShell remoting
+gates: {}
+profiles: []
+alternatives: []
+notes: Risk 4 on enterprise fleets that require WinRM.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

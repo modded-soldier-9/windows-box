@@ -1,0 +1,31 @@
+## .NET
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.DotSettings.user
+project.lock.json
+artifacts/
+TestResults/
+*.nupkg
+*.snupkg
+
+## IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Windows Box local
+**/WindowsBox/journals/
+*.journal.json

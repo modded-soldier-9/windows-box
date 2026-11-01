@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.trkwks
+area: services
+name: TrkWks
+display: Distributed Link Tracking Client
+category: performance
+description: Tracks NTFS shortcut links across the network.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  balanced: Manual
+  privacy: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Cross-volume shortcut tracking on networks
+gates: {}
+profiles:
+  - minimal
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

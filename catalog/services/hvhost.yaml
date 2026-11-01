@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.hvhost
+area: services
+name: HvHost
+display: HV Host Service
+category: virtualization
+description: Hypervisor host service providing performance counters.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Hypervisor host counters
+gates: {}
+profiles:
+  - developer
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

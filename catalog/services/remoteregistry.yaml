@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.remoteregistry
+area: services
+name: RemoteRegistry
+display: Remote Registry
+category: network
+description: Remote registry access.
+defaults:
+  pro: Disabled
+  home: Disabled
+  enterprise: Disabled
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  balanced: Disabled
+  safe: Disabled
+depends_on: []
+dependents: []
+breaks:
+  - Remote registry editing
+gates: {}
+profiles:
+  - privacy
+  - safe
+alternatives: []
+notes: Keep Disabled (already default).
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

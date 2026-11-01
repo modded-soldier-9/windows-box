@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.wpnservice
+area: services
+name: WpnService
+display: Windows Push Notifications System Service
+category: performance
+description: System toasts and Store push notifications.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Toast notifications
+  - Store push
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.cdpusersvc
+area: services
+name: CDPUserSvc
+display: Connected Devices Platform User Service
+category: privacy
+description: Per-user Connected Devices Platform instance (template).
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: true
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on:
+  - CDPSvc
+dependents: []
+breaks:
+  - Night light
+  - Nearby sharing
+  - Phone Link
+gates: {}
+profiles: []
+alternatives: []
+notes: "Per-user template: change HKLM template Start value, not the _xxxxx instance."
+sources:
+  - "https://learn.microsoft.com/windows/application-management/per-user-services-in-windows"

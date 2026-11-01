@@ -1,0 +1,27 @@
+schema_version: 1
+id: svc.gameinputsvc
+area: services
+name: GameInputSvc
+display: GameInput Service
+category: gaming
+description: GameInput stack introduced/emphasized on 24H2.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=26100"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - GameInput-based games/controllers
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://www.elevenforum.com/tutorials/"

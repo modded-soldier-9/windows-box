@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.wbiosrvc
+area: services
+name: WbioSrvc
+display: Windows Biometric Service
+category: hardware
+description: Windows Hello fingerprint and face.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: leave
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Windows Hello biometric unlock
+gates:
+  hardware_any:
+    - biometric
+profiles: []
+alternatives: []
+notes: Often Automatic when biometric hardware present.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

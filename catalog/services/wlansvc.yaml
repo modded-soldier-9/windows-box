@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.wlansvc
+area: services
+name: WlanSvc
+display: WLAN AutoConfig
+category: hardware
+description: Wi-Fi configuration and connection.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Wi-Fi connectivity
+gates: {}
+profiles: []
+alternatives: []
+notes: Never disable on systems that use Wi-Fi (especially laptops).
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

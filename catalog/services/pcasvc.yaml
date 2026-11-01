@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.pcasvc
+area: services
+name: PcaSvc
+display: Program Compatibility Assistant Service
+category: telemetry
+description: Detects legacy-app compatibility issues.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  gamer: Manual
+  minimal: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Automatic compatibility shims prompts
+gates: {}
+profiles:
+  - gamer
+  - minimal
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/ChrisTitusTech/winutil"

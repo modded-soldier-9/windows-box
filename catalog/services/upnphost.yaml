@@ -1,0 +1,31 @@
+schema_version: 1
+id: svc.upnphost
+area: services
+name: upnphost
+display: UPnP Device Host
+category: network
+description: UPnP device hosting.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on:
+  - SSDPSRV
+dependents: []
+breaks:
+  - UPnP device hosting
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

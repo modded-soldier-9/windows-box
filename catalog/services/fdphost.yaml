@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.fdphost
+area: services
+name: fdPHost
+display: Function Discovery Provider Host
+category: network
+description: Hosts network discovery providers.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Network discovery providers
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

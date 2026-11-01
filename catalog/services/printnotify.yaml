@@ -1,0 +1,29 @@
+schema_version: 1
+id: svc.printnotify
+area: services
+name: PrintNotify
+display: Printer Extensions and Notifications
+category: hardware
+description: Printer UI extensions and toast notifications.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on:
+  - Spooler
+dependents: []
+breaks:
+  - Printer extension UI
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

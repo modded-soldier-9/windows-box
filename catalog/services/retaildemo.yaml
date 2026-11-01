@@ -1,0 +1,44 @@
+schema_version: 1
+id: svc.retaildemo
+area: services
+name: RetailDemo
+display: Retail Demo Service
+category: privacy
+description: Store retail demo mode.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  gamer: Disabled
+  minimal: Disabled
+  office: Disabled
+  balanced: Disabled
+  laptop: Disabled
+  developer: Disabled
+  safe: Disabled
+depends_on: []
+dependents: []
+breaks:
+  - Retail demo mode
+gates: {}
+profiles:
+  - privacy
+  - gamer
+  - minimal
+  - office
+  - balanced
+  - laptop
+  - developer
+  - safe
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

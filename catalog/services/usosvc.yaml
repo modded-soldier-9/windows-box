@@ -1,0 +1,27 @@
+schema_version: 1
+id: svc.usosvc
+area: services
+name: UsoSvc
+display: Update Orchestrator Service
+category: updates
+description: Orchestrates Windows Update scans and installs.
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: AutomaticDelayed
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Update orchestration
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

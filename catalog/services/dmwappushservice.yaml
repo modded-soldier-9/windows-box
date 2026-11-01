@@ -1,0 +1,35 @@
+schema_version: 1
+id: svc.dmwappushservice
+area: services
+name: dmwappushservice
+display: Device Management Wireless Application Protocol (WAP) Push message Routing Service
+category: telemetry
+description: WAP push routing used by MDM and telemetry paths.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  balanced: Manual
+depends_on:
+  - RpcSs
+dependents: []
+breaks:
+  - MDM WAP push delivery when enrolled
+gates:
+  not:
+    - mdm_enrolled
+profiles:
+  - privacy
+alternatives: []
+notes: Risk rises to 3 when Intune/MDM enrolled — leave enabled then.
+sources:
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

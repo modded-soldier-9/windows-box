@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.wuauserv
+area: services
+name: wuauserv
+display: Windows Update
+category: updates
+description: Windows Update client service.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: false
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Windows Update
+gates: {}
+profiles: []
+alternatives: []
+notes: Control via deferral policy, never disable the service.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

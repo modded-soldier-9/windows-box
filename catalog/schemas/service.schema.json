@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://windowsbox.dev/schemas/service.schema.json",
+  "title": "Windows Box service catalog entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "area",
+    "name",
+    "display",
+    "category",
+    "description",
+    "defaults",
+    "builds",
+    "risk",
+    "touch_policy",
+    "recommend",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^svc\\.[a-z0-9][a-z0-9_.-]*$"
+    },
+    "area": {
+      "type": "string",
+      "const": "services"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "SCM service name (or per-user template name without _xxxxx)."
+    },
+    "display": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "telemetry",
+        "privacy",
+        "gaming",
+        "hardware",
+        "performance",
+        "network",
+        "updates",
+        "security",
+        "virtualization"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pro"],
+      "properties": {
+        "pro": { "$ref": "#/$defs/startType" },
+        "home": { "$ref": "#/$defs/startType" },
+        "enterprise": { "$ref": "#/$defs/startType" }
+      }
+    },
+    "builds": {
+      "type": "string",
+      "description": "Semver-ish OS build constraint, e.g. >=22621",
+      "pattern": "^>=\\d+$"
+    },
+    "risk": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4,
+      "description": "0=never touch … 4=breaks updates/login/security"
+    },
+    "protected": {
+      "type": "boolean",
+      "default": false
+    },
+    "per_user": {
+      "type": "boolean",
+      "default": false
+    },
+    "optional": {
+      "type": "boolean",
+      "default": false,
+      "description": "Service may be absent on some SKUs/builds."
+    },
+    "touch_policy": {
+      "type": "string",
+      "enum": ["allow", "leave", "never", "policy_only"]
+    },
+    "recommend": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/startType" },
+      "propertyNames": {
+        "enum": [
+          "safe",
+          "balanced",
+          "gamer",
+          "laptop",
+          "office",
+          "privacy",
+          "developer",
+          "minimal"
+        ]
+      },
+      "description": "Preferred start type per profile. Prefer Manual over Disabled unless vetted."
+    },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "dependents": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "breaks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "not": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "hardware_any": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "feature_any": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "safe",
+          "balanced",
+          "gamer",
+          "laptop",
+          "office",
+          "privacy",
+          "developer",
+          "minimal"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["policy", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "policy": { "type": "string" },
+          "value": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "notes": { "type": "string" },
+    "honesty_label": {
+      "type": "string",
+      "enum": ["unproven", "measured", "community"]
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "format": "uri" }
+    }
+  },
+  "$defs": {
+    "startType": {
+      "type": "string",
+      "enum": [
+        "Automatic",
+        "AutomaticDelayed",
+        "Manual",
+        "ManualTrigger",
+        "Disabled"
+      ]
+    }
+  }
+}

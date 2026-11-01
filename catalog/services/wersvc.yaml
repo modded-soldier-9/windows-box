@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.wersvc
+area: services
+name: WerSvc
+display: Windows Error Reporting Service
+category: telemetry
+description: Uploads crash reports to Microsoft.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Automatic crash report upload
+  - Some Feedback Hub crash flows
+gates: {}
+profiles:
+  - privacy
+alternatives: []
+notes: Disabled keeps local dumps from uploading; local dump collection can still be configured separately.
+sources:
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

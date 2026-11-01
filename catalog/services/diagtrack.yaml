@@ -1,0 +1,40 @@
+schema_version: 1
+id: svc.diagtrack
+area: services
+name: DiagTrack
+display: Connected User Experiences and Telemetry
+category: telemetry
+description: Sends diagnostic and usage data to Microsoft.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  privacy: Disabled
+  gamer: Disabled
+  minimal: Disabled
+  balanced: Manual
+depends_on:
+  - RpcSs
+dependents: []
+breaks:
+  - Optional diagnostic data upload
+  - Some Feedback Hub features
+gates:
+  not:
+    - mdm_enrolled
+profiles:
+  - privacy
+  - gamer
+  - minimal
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

@@ -1,0 +1,28 @@
+schema_version: 1
+id: svc.wdisystemhost
+area: services
+name: WdiSystemHost
+display: Diagnostic System Host
+category: telemetry
+description: Hosts system-context DPS diagnostics.
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+depends_on:
+  - DPS
+dependents: []
+breaks: []
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

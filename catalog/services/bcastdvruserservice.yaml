@@ -1,0 +1,32 @@
+schema_version: 1
+id: svc.bcastdvruserservice
+area: services
+name: BcastDVRUserService
+display: GameDVR and Broadcast User Service
+category: gaming
+description: Game Bar capture and broadcast (per-user template).
+defaults:
+  pro: Manual
+  home: Manual
+  enterprise: Manual
+builds: ">=22621"
+risk: 2
+protected: false
+per_user: true
+optional: false
+touch_policy: allow
+recommend:
+  gamer: Manual
+  balanced: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Game Bar capture
+gates: {}
+profiles:
+  - gamer
+alternatives: []
+notes: Pair with GameDVR policy disable when unwanted; edit template.
+sources:
+  - "https://learn.microsoft.com/windows/application-management/per-user-services-in-windows"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

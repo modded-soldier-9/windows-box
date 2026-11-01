@@ -1,0 +1,27 @@
+schema_version: 1
+id: svc.sgrmbroker
+area: services
+name: SgrmBroker
+display: System Guard Runtime Monitor Broker
+category: security
+description: System Guard Runtime Monitor Broker — security-critical.
+defaults:
+  pro: Automatic
+  home: Automatic
+  enterprise: Automatic
+builds: ">=22621"
+risk: 0
+protected: true
+per_user: false
+optional: false
+touch_policy: never
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Security posture
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"

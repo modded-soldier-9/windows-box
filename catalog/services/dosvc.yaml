@@ -1,0 +1,33 @@
+schema_version: 1
+id: svc.dosvc
+area: services
+name: DoSvc
+display: Delivery Optimization
+category: performance
+description: P2P Windows Update and Store delivery.
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: Manual
+builds: ">=22621"
+risk: 4
+protected: true
+per_user: false
+optional: false
+touch_policy: policy_only
+recommend: {}
+depends_on: []
+dependents: []
+breaks:
+  - Peer-to-peer update delivery
+gates: {}
+profiles:
+  - privacy
+alternatives:
+  - policy: "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DeliveryOptimization!DODownloadMode"
+    value: 0
+    description: HTTP only, no peering
+notes: Protected — use DODownloadMode policy, do not sc config.
+sources:
+  - "https://learn.microsoft.com/windows/deployment/do/waas-delivery-optimization-reference"
+  - "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services"

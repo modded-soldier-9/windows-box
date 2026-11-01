@@ -1,0 +1,35 @@
+schema_version: 1
+id: svc.wsearch
+area: services
+name: WSearch
+display: Windows Search
+category: performance
+description: Search indexing for Start, Explorer, and Outlook.
+defaults:
+  pro: AutomaticDelayed
+  home: AutomaticDelayed
+  enterprise: AutomaticDelayed
+builds: ">=22621"
+risk: 3
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  minimal: Manual
+  gamer: Manual
+  balanced: Manual
+depends_on:
+  - RpcSs
+dependents: []
+breaks:
+  - Fast Start/Explorer/Outlook search
+gates: {}
+profiles:
+  - minimal
+  - gamer
+alternatives: []
+notes: Disable only on explicit request; Outlook search breaks when indexing is off.
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
+  - "https://github.com/farag2/Sophia-Script-for-Windows"

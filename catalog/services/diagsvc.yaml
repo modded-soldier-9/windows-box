@@ -1,0 +1,30 @@
+schema_version: 1
+id: svc.diagsvc
+area: services
+name: diagsvc
+display: Diagnostic Execution Service
+category: telemetry
+description: Runs troubleshooter diagnostics.
+defaults:
+  pro: ManualTrigger
+  home: ManualTrigger
+  enterprise: ManualTrigger
+builds: ">=22621"
+risk: 1
+protected: false
+per_user: false
+optional: false
+touch_policy: allow
+recommend:
+  balanced: Manual
+  privacy: Manual
+  minimal: Manual
+depends_on: []
+dependents: []
+breaks:
+  - Some built-in troubleshooters
+gates: {}
+profiles: []
+alternatives: []
+sources:
+  - "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server"
