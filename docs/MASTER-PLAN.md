@@ -62,7 +62,7 @@ Cross-cutting features: item cards (what it does, what you gain, what breaks, ri
 
 ## 5. Services design (flagship)
 
-Principles: Manual before Disabled; measure, don't assume; detect before recommending; never fight Windows (no ownership hacks on protected services); explain everything. Catalog content: `catalog/services/*.yaml` (PR #1, 87 entries), human-readable table in `docs/catalogs/services.md`.
+Principles: Manual before Disabled; measure, don't assume; detect before recommending; never fight Windows (no ownership hacks on protected services); explain everything. Catalog content: `catalog/services/*.yaml` (PR #1, 88 entries), human-readable table in `docs/catalogs/services.md`.
 
 **Risk scale (0 to 4, matches PR #1 schema).** 0 never touch, 1 safe to set Manual, 2 safe to Disable if feature unused, 3 situational and breaks a visible feature, 4 breaks updates, Store, login or security.
 **touch_policy.** `allow` (engine may change it), `leave` (shown, recommended untouched), `never` (boot or security critical, read only), `policy_only` (protected service; offer the documented policy alternative instead).
@@ -149,7 +149,7 @@ sources: ["https://learn.microsoft.com/windows/privacy/manage-connections-from-w
 
 | Milestone | Scope | Exit criteria |
 |-|-|-|
-| **M0 Foundation** (PR #1, in review) | Solution layout, service schema v1, 87 service YAMLs, loader and validator, preview planner, apply pipeline, journal, health check, Elevator stub, CLI, WinUI shell, CI | CI green, PR merged |
+| **M0 Foundation** (PR #1, in review) | Solution layout, service schema v1, 88 service YAMLs, loader and validator, preview planner, apply pipeline, journal, health check, Elevator stub, CLI, WinUI shell, CI | CI green, PR merged |
 | **M1 Services MVP** (4 wks) | Real Windows adapters (SCM, registry, probe), live preview, Elevator apply, rollback, offline restore kit, Services page with item cards, VM harness verifying defaults and apply then undo round-trips | Apply then rollback returns identical state on all VM targets |
 | **M2 Software MVP** (4 wks) | winget COM adapter, curated catalog (~150 apps), unified inventory, install queue, update review with pin and ignore, bundles, JSONL logs, install rollback | Bundle install and rollback on clean VM |
 | **M3 Breadth on one engine** (3 wks) | Privacy and AI, startup, tasks, appx, visual, power, network, update deferral; schema v2; onboarding wizard; history timeline | Every item has undo or explicit one-way flag |
