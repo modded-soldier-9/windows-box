@@ -1,3 +1,4 @@
+<!-- Fact-checked 1 Nov 2026; see tools.md and licenses.md for sources. Footprint claims are design goals, not measurements. -->
 # Synthesis: what Windows Box should be
 
 ## What the best tools do well
@@ -18,10 +19,10 @@
   - resident agents, upsells and bundleware
   - registry cleaning that is snake oil
   - "health scores" that play on fear
-  - a supply-chain breach (CCleaner 2017)
+  - a supply-chain breach (CCleaner 5.33, Aug–Sep 2017, 2.27M users — [Avast](https://blog.avast.com/progress-on-ccleaner-investigation)) and a Defender PUA flag for bundling (July 2020 — [Microsoft](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=PUA%3AWin32%2FPiriformBundler))
 - **Script tools:** powerful, but the UX is a wall of checkboxes with no explanation of impact or check that settings stayed applied.
 - **Distros (Atlas/ReviOS/Tiny11):** security trade-offs (Defender off, CPU mitigations off), they break servicing and updates, and some changes can't be undone.
-- **Shell mods:** DLL injection that breaks after Windows updates and gets flagged by antivirus.
+- **Shell mods:** DLL injection that breaks after Windows updates and gets flagged by antivirus (ExplorerPatcher, repeated Defender detections in 2024 — [#3228](https://github.com/valinet/ExplorerPatcher/issues/3228)).
 - **Drift:** no tool checks whether Windows Update quietly undid your tweaks.
 - **Fragmentation:** each tool has its own UI and format, so users run five of them.
 
