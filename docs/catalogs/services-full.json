@@ -1,0 +1,7061 @@
+{
+ "schema": "windows-box/services-full/v1",
+ "generated": "2026-11-01",
+ "os": "Windows 11 23H2/24H2/25H2",
+ "risk_scale": {
+  "0": "Never touch (boot/security critical)",
+  "1": "Safe to set Manual",
+  "2": "Safe to Disable if feature unused",
+  "3": "Situational, breaks a visible feature",
+  "4": "Breaks updates, Store, login or security"
+ },
+ "start_types": [
+  "Automatic",
+  "AutomaticDelayed",
+  "AutomaticTrigger",
+  "Disabled",
+  "Manual",
+  "ManualTrigger"
+ ],
+ "sources": [
+  "https://learn.microsoft.com/windows-server/security/windows-services/security-guidelines-for-disabling-system-services-in-windows-server",
+  "https://learn.microsoft.com/windows/iot/iot-enterprise/optimize/services",
+  "https://learn.microsoft.com/windows/application-management/per-user-services-in-windows",
+  "https://learn.microsoft.com/windows/privacy/manage-connections-from-windows-operating-system-components-to-microsoft-services",
+  "https://learn.microsoft.com/windows/deployment/do/waas-delivery-optimization-reference",
+  "https://www.elevenforum.com/tutorials/ (per-service default tutorials)",
+  "https://web.archive.org/web/2020*/blackviper.com/service-configurations/ (Windows 10 era, methodology only)",
+  "https://github.com/ChrisTitusTech/winutil (config/tweaks.json, WPFTweaksServices)",
+  "https://github.com/farag2/Sophia-Script-for-Windows"
+ ],
+ "count": 290,
+ "verified_count": 0,
+ "services": [
+  {
+   "name": "AarSvc",
+   "per_user": true,
+   "display": "Agent Activation Runtime",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Activates voice assistants (Cortana/Copilot voice) for the user",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only voice agents use it",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AJRouter",
+   "per_user": false,
+   "display": "AllJoyn Router Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Routes AllJoyn IoT messages (deprecated protocol)",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Deprecated, nothing modern uses it",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ALG",
+   "per_user": false,
+   "display": "Application Layer Gateway Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Plug-in support for legacy Internet Connection Sharing",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only legacy ICS",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppHostSvc",
+   "per_user": false,
+   "display": "Application Host Helper Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "IIS config history",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only with IIS installed",
+   "presence": "optional",
+   "notes": "Optional feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppIDSvc",
+   "per_user": false,
+   "display": "Application Identity",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Checks app identity for AppLocker policies",
+   "depends_on": [
+    "RpcSs",
+    "AppID",
+    "CryptSvc"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "AppLocker/WDAC rules stop working",
+   "presence": "inbox",
+   "notes": "Enterprise relevance higher",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Appinfo",
+   "per_user": false,
+   "display": "Application Information",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Runs apps with admin rights (UAC prompts)",
+   "depends_on": [
+    "RpcSs",
+    "ProfSvc"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "UAC elevation breaks completely",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppMgmt",
+   "per_user": false,
+   "display": "Application Management",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Group Policy software installation",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only domain software deployment",
+   "presence": "inbox",
+   "notes": "Pro/Enterprise only",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppReadiness",
+   "per_user": false,
+   "display": "App Readiness",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Prepares Store apps at first sign-in and after updates",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "First logon and feature updates hang",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppVClient",
+   "per_user": false,
+   "display": "Microsoft App-V Client",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Runs App-V virtualized applications",
+   "depends_on": [
+    "RpcSs",
+    "AppvVfs",
+    "AppvStrm"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default, enterprise only",
+   "presence": "inbox",
+   "notes": "Enterprise/Pro feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AppXSvc",
+   "per_user": false,
+   "display": "AppX Deployment Service (AppXSVC)",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Installs, updates and removes Store apps",
+   "depends_on": [
+    "RpcSs",
+    "staterepository"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Store, Start and many inbox apps break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ApxSvc",
+   "per_user": false,
+   "display": "Windows Virtual Audio Device Proxy Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Proxy for virtual audio devices (24H2+)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Virtual audio devices may fail",
+   "presence": "optional",
+   "notes": "24H2+, unverified name",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AssignedAccessManagerSvc",
+   "per_user": false,
+   "display": "AssignedAccessManager Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Kiosk (assigned access) mode",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only kiosk setups",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AudioEndpointBuilder",
+   "per_user": false,
+   "display": "Windows Audio Endpoint Builder",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Manages audio devices for Windows Audio",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "No sound",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Audiosrv",
+   "per_user": false,
+   "display": "Windows Audio",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Plays all system and app audio",
+   "depends_on": [
+    "RpcSs",
+    "AudioEndpointBuilder"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "No sound",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "autotimesvc",
+   "per_user": false,
+   "display": "Cellular Time",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Sets time from mobile network",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only cellular devices",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "AxInstSV",
+   "per_user": false,
+   "display": "ActiveX Installer (AxInstSV)",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs ActiveX controls from intranet sites per policy",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy IE-era",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BcastDVRUserService",
+   "per_user": true,
+   "display": "GameDVR and Broadcast User Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Game Bar screen recording and broadcasts",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only Game Bar capture",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BDESVC",
+   "per_user": false,
+   "display": "BitLocker Drive Encryption Service",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "BitLocker unlock prompts and management",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Encrypted drives may not unlock/manage",
+   "presence": "inbox",
+   "notes": "Home has Device Encryption only",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BFE",
+   "per_user": false,
+   "display": "Base Filtering Engine",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Core of firewall and IPsec filtering",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Firewall, VPNs and IPsec stop",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BITS",
+   "per_user": false,
+   "display": "Background Intelligent Transfer Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Background downloads for Windows Update, Store, Defender",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Updates stop",
+   "presence": "inbox",
+   "notes": "Some sources list AD",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BluetoothUserService",
+   "per_user": true,
+   "display": "Bluetooth User Support Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Per-user Bluetooth features",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Bluetooth pairing UI",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BrokerInfrastructure",
+   "per_user": false,
+   "display": "Background Tasks Infrastructure Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Controls which background tasks may run",
+   "depends_on": [
+    "RpcEptMapper",
+    "DcomLaunch"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Core system broker",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Browser",
+   "per_user": false,
+   "display": "Computer Browser",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Legacy SMB1 network browse list",
+   "depends_on": [
+    "LanmanWorkstation",
+    "LanmanServer"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only present if SMB1 installed",
+   "presence": "optional",
+   "notes": "Usually absent",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BTAGService",
+   "per_user": false,
+   "display": "Bluetooth Audio Gateway Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Bluetooth headset hands-free profile",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "BT headset mics break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "BthAvctpSvc",
+   "per_user": false,
+   "display": "AVCTP service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Bluetooth audio remote control (play/pause)",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "BT media keys break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "bthserv",
+   "per_user": false,
+   "display": "Bluetooth Support Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Discovers and pairs Bluetooth devices",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "All Bluetooth stops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "camsvc",
+   "per_user": false,
+   "display": "Capability Access Manager Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Grants apps access to camera, mic, location",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "App privacy permissions break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CaptureService",
+   "per_user": true,
+   "display": "CaptureService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Screen capture for apps (Windows.Graphics.Capture)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Snipping/screen share apps fail",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "cbdhsvc",
+   "per_user": true,
+   "display": "Clipboard User Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Clipboard history and cloud clipboard",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Win+V history breaks",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CDPSvc",
+   "per_user": false,
+   "display": "Connected Devices Platform Service",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Phone Link, nearby sharing, device discovery",
+   "depends_on": [
+    "ncbservice",
+    "RpcSs",
+    "Tcpip"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Phone Link, nearby share, some settings sync break",
+   "presence": "inbox",
+   "notes": "Community reports Night light issues",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CDPUserSvc",
+   "per_user": true,
+   "display": "Connected Devices Platform User Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Per-user part of Connected Devices Platform",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Notifications and Phone Link side effects",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CertPropSvc",
+   "per_user": false,
+   "display": "Certificate Propagation",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Copies smart card certificates to the user store",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only smart card users",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ClipSVC",
+   "per_user": false,
+   "display": "Client License Service (ClipSVC)",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Licenses Store apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Store apps refuse to launch",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CloudBackupRestoreSvc",
+   "per_user": true,
+   "display": "Cloud Backup and Restore Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Backup app cloud restore (24H2+)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Windows Backup app",
+   "presence": "optional",
+   "notes": "per-user template; 24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "cloudidsvc",
+   "per_user": false,
+   "display": "Microsoft Cloud Identity Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Cloud identity tenant restrictions",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Enterprise tenant restrictions",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CmService",
+   "per_user": false,
+   "display": "Container Manager Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows containers, Sandbox",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Sandbox/containers",
+   "presence": "optional",
+   "notes": "Feature-gated",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "COMSysApp",
+   "per_user": false,
+   "display": "COM+ System Application",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Configures COM+ components",
+   "depends_on": [
+    "SENS",
+    "EventSystem",
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Some installers and apps fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ConsentUxUserSvc",
+   "per_user": true,
+   "display": "ConsentUX User Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Consent dialogs for device pairing (Miracast etc.)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Pairing prompts fail",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CoreMessagingRegistrar",
+   "per_user": false,
+   "display": "CoreMessaging",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Inter-component messaging for UI",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Shell UI breaks",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CredentialEnrollmentManagerUserSvc",
+   "per_user": true,
+   "display": "CredentialEnrollmentManagerUserSvc",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Hello credential enrollment",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Hello setup fails",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CryptSvc",
+   "per_user": false,
+   "display": "Cryptographic Services",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Certificates, signature checks, catalog database",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Updates, installs, TLS break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "CscService",
+   "per_user": false,
+   "display": "Offline Files",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Offline Files cache for network shares",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only domain/NAS offline files",
+   "presence": "optional",
+   "notes": "Pro+; Home absent; WinUtil sets Disabled",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DcomLaunch",
+   "per_user": false,
+   "display": "DCOM Server Process Launcher",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Starts COM servers; foundation of the system",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "System will not boot properly",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "dcsvc",
+   "per_user": false,
+   "display": "Declared Configuration (DC) service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Declared-configuration MDM (newer builds)",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "MDM only",
+   "presence": "optional",
+   "notes": "23H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "defragsvc",
+   "per_user": false,
+   "display": "Optimize drives",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Scheduled TRIM/defrag",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "SSD TRIM and HDD defrag stop",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DeviceAssociationBrokerSvc",
+   "per_user": true,
+   "display": "DeviceAssociationBroker",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Lets Store apps pair devices",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "App-driven pairing fails",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DeviceAssociationService",
+   "per_user": false,
+   "display": "Device Association Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Pairs wired/wireless devices",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Device pairing breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DeviceInstall",
+   "per_user": false,
+   "display": "Device Install Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Installs drivers for new hardware",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "New hardware not installed",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DevicePickerUserSvc",
+   "per_user": true,
+   "display": "DevicePicker",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Device picker UI (Cast, Miracast)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Cast picker fails",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DevicesFlowUserSvc",
+   "per_user": true,
+   "display": "DevicesFlow",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Connect/pair device flows",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Pairing flows fail",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DevQueryBroker",
+   "per_user": false,
+   "display": "DevQuery Background Discovery Broker",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Background device discovery for apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Device discovery in apps",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Dhcp",
+   "per_user": false,
+   "display": "DHCP Client",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Gets IP addresses from routers",
+   "depends_on": [
+    "Afd",
+    "Tcpip",
+    "NSI"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "No network",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "diagnosticshub.standardcollector.service",
+   "per_user": false,
+   "display": "Microsoft (R) Diagnostics Hub Standard Collector Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Collects ETW traces for diagnostics tools (Visual Studio)",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only diagnostics tools",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "diagsvc",
+   "per_user": false,
+   "display": "Diagnostic Execution Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Runs troubleshooter actions",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Troubleshooters only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DiagTrack",
+   "per_user": false,
+   "display": "Connected User Experiences and Telemetry",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Sends diagnostic and usage data to Microsoft",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only telemetry upload; policy is the supported control",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DialogBlockingService",
+   "per_user": false,
+   "display": "DialogBlockingService",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Blocks dialogs in some setup states",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DispBrokerDesktopSvc",
+   "per_user": false,
+   "display": "Display Policy Service",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Display settings and policy",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Display configuration breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DisplayEnhancementService",
+   "per_user": false,
+   "display": "Display Enhancement Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Adaptive brightness and display enhancement",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Laptop auto brightness",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DmEnrollmentSvc",
+   "per_user": false,
+   "display": "Device Management Enrollment Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "MDM enrollment",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only MDM enrollment",
+   "presence": "inbox",
+   "notes": "4 if enrolled",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "dmwappushservice",
+   "per_user": false,
+   "display": "Device Management Wireless Application Protocol (WAP) Push message Routing Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Routes MDM push messages",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "MDM sync only",
+   "presence": "inbox",
+   "notes": "4 if Intune",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Dnscache",
+   "per_user": false,
+   "display": "DNS Client",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Caches DNS lookups",
+   "depends_on": [
+    "Tcpip",
+    "nsi"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Name resolution slows/breaks; cannot be disabled via UI",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DoSvc",
+   "per_user": false,
+   "display": "Delivery Optimization",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Peer-to-peer and CDN downloads for updates and Store",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Updates and Store downloads fail",
+   "presence": "inbox",
+   "notes": "Protected; MS docs: use policy. Some sources show M(T) on 24H2",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "dot3svc",
+   "per_user": false,
+   "display": "Wired AutoConfig",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "802.1X authentication on wired networks",
+   "depends_on": [
+    "RpcSs",
+    "Ndisuio"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only 802.1X networks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DPS",
+   "per_user": false,
+   "display": "Diagnostic Policy Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Problem detection and troubleshooting, resource usage data",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Network diagnostics and SRUM data stop",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DsmSvc",
+   "per_user": false,
+   "display": "Device Setup Manager",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Downloads device metadata and apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Device-specific software not fetched",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DsSvc",
+   "per_user": false,
+   "display": "Data Sharing Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Data brokering between apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "App-to-app data sharing",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "DusmSvc",
+   "per_user": false,
+   "display": "Data Usage",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network data usage, metered limits",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Data usage and metered settings",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "EapHost",
+   "per_user": false,
+   "display": "Extensible Authentication Protocol",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "EAP auth for Wi-Fi/VPN enterprise",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Enterprise Wi-Fi/VPN fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "edgeupdate",
+   "per_user": false,
+   "display": "Microsoft Edge Update Service (edgeupdate)",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Updates Edge",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Edge stops updating (security)",
+   "presence": "inbox",
+   "notes": "Edge component",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "edgeupdatem",
+   "per_user": false,
+   "display": "Microsoft Edge Update Service (edgeupdatem)",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Updates Edge on demand",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Edge stops updating",
+   "presence": "inbox",
+   "notes": "Edge component",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "EFS",
+   "per_user": false,
+   "display": "Encrypting File System (EFS)",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "File encryption with EFS",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "EFS-encrypted files unreadable",
+   "presence": "inbox",
+   "notes": "Pro+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "embeddedmode",
+   "per_user": false,
+   "display": "Embedded Mode",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "IoT background apps",
+   "depends_on": [
+    "BrokerInfrastructure"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "IoT only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "EntAppSvc",
+   "per_user": false,
+   "display": "Enterprise App Management Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Enterprise app management",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Enterprise only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "EventLog",
+   "per_user": false,
+   "display": "Windows Event Log",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Records system and app events",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Many services fail; no logs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "EventSystem",
+   "per_user": false,
+   "display": "COM+ Event System",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Event notification for COM components",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Many dependents fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Fax",
+   "per_user": false,
+   "display": "Fax",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Sends and receives faxes",
+   "depends_on": [
+    "Spooler",
+    "TapiSrv"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only fax users",
+   "presence": "optional",
+   "notes": "Optional on 24H2 (capability)",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "fdPHost",
+   "per_user": false,
+   "display": "Function Discovery Provider Host",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hosts network discovery providers",
+   "depends_on": [
+    "RpcSs",
+    "http"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Network discovery of PCs/printers",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "FDResPub",
+   "per_user": false,
+   "display": "Function Discovery Resource Publication",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Publishes this PC on the network",
+   "depends_on": [
+    "RpcSs",
+    "http",
+    "fdPHost"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "PC not visible on network",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "fhsvc",
+   "per_user": false,
+   "display": "File History Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "File History backups",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "File History stops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "FileSyncHelper",
+   "per_user": false,
+   "display": "FileSyncHelper",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "OneDrive Files On-Demand helper",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "OneDrive placeholders",
+   "presence": "optional",
+   "notes": "Installed by OneDrive; not inbox",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "FontCache",
+   "per_user": false,
+   "display": "Windows Font Cache Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Caches fonts for apps",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Slow, broken font rendering",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "FrameServer",
+   "per_user": false,
+   "display": "Windows Camera Frame Server",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Lets several apps share the webcam",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Webcams break in many apps",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "FrameServerMonitor",
+   "per_user": false,
+   "display": "Windows Camera Frame Server Monitor",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Monitors camera frame server",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Camera presence detection",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "GameInputRedistService",
+   "per_user": false,
+   "display": "GameInput Redist Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "GameInput redistributable updater",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Game input",
+   "presence": "optional",
+   "notes": "Installed by games; unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "GameInputSvc",
+   "per_user": false,
+   "display": "GameInput Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Game controller input stack",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Some game input",
+   "presence": "optional",
+   "notes": "24H2+ (installed with GameInput redist)",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "gpsvc",
+   "per_user": false,
+   "display": "Group Policy Client",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Applies Group Policy",
+   "depends_on": [
+    "RpcSs",
+    "Mup"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Policy not applied; protected",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "GraphicsPerfSvc",
+   "per_user": false,
+   "display": "GraphicsPerfSvc",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "GPU performance counters",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only perf tooling",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "hidserv",
+   "per_user": false,
+   "display": "Human Interface Device Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Hot keys on keyboards/remotes",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Multimedia keys break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "hpatchmon",
+   "per_user": false,
+   "display": "Hotpatch Monitoring Service",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "MayBeAbsent (unverified)",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hotpatch update monitoring (24H2 Enterprise)",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Hotpatch servicing",
+   "presence": "optional",
+   "notes": "24H2+, Enterprise, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "HvHost",
+   "per_user": false,
+   "display": "HV Host Service",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hyper-V host performance counters",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Hyper-V/WSL2 hosts",
+   "presence": "inbox",
+   "notes": "Pro+ with Hyper-V",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "icssvc",
+   "per_user": false,
+   "display": "Windows Mobile Hotspot Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Mobile Hotspot",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only hotspot users",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "IKEEXT",
+   "per_user": false,
+   "display": "IKE and AuthIP IPsec Keying Modules",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "IPsec key exchange for VPNs",
+   "depends_on": [
+    "BFE"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "IPsec VPNs fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "InstallService",
+   "per_user": false,
+   "display": "Microsoft Store Install Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs Store apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Store installs fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "InventorySvc",
+   "per_user": false,
+   "display": "Inventory and Compatibility Appraisal service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Compatibility appraisal for upgrades",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Feature update readiness checks",
+   "presence": "optional",
+   "notes": "22H2+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "iphlpsvc",
+   "per_user": false,
+   "display": "IP Helper",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "IPv6 transition tech (Teredo, 6to4, IP-HTTPS)",
+   "depends_on": [
+    "RpcSs",
+    "Tcpip",
+    "nsi",
+    "WinHttpAutoProxySvc"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "IPv6 tunnels, Xbox Teredo, DirectAccess",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "IpxlatCfgSvc",
+   "per_user": false,
+   "display": "IP Translation Configuration Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "464XLAT for IPv6-only mobile networks",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Cellular IPv6-only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "KeyIso",
+   "per_user": false,
+   "display": "CNG Key Isolation",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Protects private keys",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Certificates and Wi-Fi auth break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "KtmRm",
+   "per_user": false,
+   "display": "KtmRm for Distributed Transaction Coordinator",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Transactions between MSDTC and KTM",
+   "depends_on": [
+    "RpcSs",
+    "SamSS"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only distributed transactions",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LanmanServer",
+   "per_user": false,
+   "display": "Server",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "File and printer sharing (SMB server)",
+   "depends_on": [
+    "SamSS",
+    "Srv2"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Sharing from this PC stops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LanmanWorkstation",
+   "per_user": false,
+   "display": "Workstation",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "SMB client to network shares",
+   "depends_on": [
+    "Bowser",
+    "MRxSmb20",
+    "NSI"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Network drives stop",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "lfsvc",
+   "per_user": false,
+   "display": "Geolocation Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Location for apps, auto time zone, Find my device",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Location features break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LicenseManager",
+   "per_user": false,
+   "display": "Windows License Manager Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Store license infrastructure",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Store apps",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "lltdsvc",
+   "per_user": false,
+   "display": "Link-Layer Topology Discovery Mapper",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network map",
+   "depends_on": [
+    "RpcSs",
+    "Tcpip"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Network map only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "lmhosts",
+   "per_user": false,
+   "display": "TCP/IP NetBIOS Helper",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "NetBIOS name resolution",
+   "depends_on": [
+    "Afd"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Legacy name resolution",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LocalKdc",
+   "per_user": false,
+   "display": "Kerberos Local Key Distribution Center",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Local KDC for Kerberos without DC (24H2+)",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Newer local auth",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LSM",
+   "per_user": false,
+   "display": "Local Session Manager",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Manages user sessions",
+   "depends_on": [
+    "RpcEptMapper",
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Logon breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LxpSvc",
+   "per_user": false,
+   "display": "Language Experience Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs language packs",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Language packs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "LxssManager",
+   "per_user": false,
+   "display": "LxssManager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Legacy WSL (inbox WSL1) manager",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "WSL breaks for developers",
+   "presence": "optional",
+   "notes": "Present only with WSL optional feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MapsBroker",
+   "per_user": false,
+   "display": "Downloaded Maps Manager",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Offline maps for the Maps app",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Maps app offline maps only",
+   "presence": "optional",
+   "notes": "Maps app retired; may be absent on 25H2",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "McmSvc",
+   "per_user": false,
+   "display": "Mobile Connectivity Management Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Cellular connectivity (24H2+)",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Cellular only",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "McpManagementService",
+   "per_user": false,
+   "display": "McpManagementService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Universal Print/Mcp management",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Rarely used",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MDCoreSvc",
+   "per_user": false,
+   "display": "Microsoft Defender Core Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Defender core engine helper (2024+)",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security",
+   "presence": "inbox",
+   "notes": "Protected; added via platform update",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MessagingService",
+   "per_user": true,
+   "display": "MessagingService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "SMS and text messaging",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Phone SMS relay",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MicrosoftEdgeElevationService",
+   "per_user": false,
+   "display": "Microsoft Edge Elevation Service (MicrosoftEdgeElevationService)",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Edge elevated operations",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Edge updates/features",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MixedRealityOpenXRSvc",
+   "per_user": false,
+   "display": "Windows Mixed Reality OpenXR Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Mixed Reality OpenXR runtime",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "WMR is deprecated (removed 24H2)",
+   "presence": "optional",
+   "notes": "May be absent 24H2+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "mpssvc",
+   "per_user": false,
+   "display": "Windows Defender Firewall",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Firewall",
+   "depends_on": [
+    "mpsdrv",
+    "bfe"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security; store apps fail to install",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MSDTC",
+   "per_user": false,
+   "display": "Distributed Transaction Coordinator",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Coordinates database/message transactions",
+   "depends_on": [
+    "RpcSs",
+    "SamSS"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Only transaction apps",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MSiSCSI",
+   "per_user": false,
+   "display": "Microsoft iSCSI Initiator Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Connects to iSCSI storage",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "iSCSI only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "msiserver",
+   "per_user": false,
+   "display": "Windows Installer",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs MSI packages",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Software can't be installed",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MsKeyboardFilter",
+   "per_user": false,
+   "display": "Microsoft Keyboard Filter",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Blocks key combos (Enterprise lockdown)",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "Enterprise",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "MSMQ",
+   "per_user": false,
+   "display": "Message Queuing",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Message queuing",
+   "depends_on": [
+    "RPCSS",
+    "LanmanServer"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only with MSMQ feature",
+   "presence": "optional",
+   "notes": "Optional feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NaturalAuthentication",
+   "per_user": false,
+   "display": "Natural Authentication",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Dynamic Lock signal aggregation",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Dynamic Lock",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NcaSvc",
+   "per_user": false,
+   "display": "Network Connectivity Assistant",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "DirectAccess status",
+   "depends_on": [
+    "BFE",
+    "dnscache",
+    "NSI",
+    "iphlpsvc"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "DirectAccess",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NcbService",
+   "per_user": false,
+   "display": "Network Connection Broker",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Network notifications for Store apps",
+   "depends_on": [
+    "RpcSs",
+    "tcpip"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Apps miss network change events",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NcdAutoSetup",
+   "per_user": false,
+   "display": "Network Connected Devices Auto-Setup",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Auto-installs network devices",
+   "depends_on": [
+    "netprofm"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Auto setup of network printers",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Netlogon",
+   "per_user": false,
+   "display": "Netlogon",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Domain logon secure channel",
+   "depends_on": [
+    "LanmanWorkstation"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Domain logon fails",
+   "presence": "inbox",
+   "notes": "Pro+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Netman",
+   "per_user": false,
+   "display": "Network Connections",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network Connections folder",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Network adapter UI",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "netprofm",
+   "per_user": false,
+   "display": "Network List Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Identifies networks and their profiles",
+   "depends_on": [
+    "RpcSs",
+    "nlasvc"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Network status breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NetSetupSvc",
+   "per_user": false,
+   "display": "Network Setup Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs network drivers and settings",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Adapter install fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NetTcpPortSharing",
+   "per_user": false,
+   "display": "Net.Tcp Port Sharing Service",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "WCF port sharing",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NgcCtnrSvc",
+   "per_user": false,
+   "display": "Microsoft Passport Container",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Hello key container",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "PIN/Hello sign-in fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NgcSvc",
+   "per_user": false,
+   "display": "Microsoft Passport",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Hello keys",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "PIN/Hello sign-in fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NlaSvc",
+   "per_user": false,
+   "display": "Network Location Awareness",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Detects network and connectivity",
+   "depends_on": [
+    "NSI",
+    "RpcSs",
+    "TcpIp",
+    "Dhcp",
+    "Eventlog"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Network profile/Internet status breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "NPSMSvc",
+   "per_user": true,
+   "display": "Now Playing Session Manager Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Media controls in quick settings",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Media flyout breaks",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "nsi",
+   "per_user": false,
+   "display": "Network Store Interface Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network state notifications",
+   "depends_on": [
+    "rpcss",
+    "nsiproxy"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "No networking",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "OneSyncSvc",
+   "per_user": true,
+   "display": "Sync Host",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Syncs mail, contacts, calendar",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Mail/Calendar sync",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "p2pimsvc",
+   "per_user": false,
+   "display": "Peer Networking Identity Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Peer-to-peer identity",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy P2P",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "p2psvc",
+   "per_user": false,
+   "display": "Peer Networking Grouping",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Peer-to-peer groups",
+   "depends_on": [
+    "p2pimsvc",
+    "PNRPsvc"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy P2P",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "P9RdrService",
+   "per_user": true,
+   "display": "P9RdrService",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Plan 9 file server for WSL file access",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "WSL \\\\wsl$ access",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PcaSvc",
+   "per_user": false,
+   "display": "Program Compatibility Assistant Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Detects compatibility issues in old apps",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Compatibility prompts",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PeerDistSvc",
+   "per_user": false,
+   "display": "BranchCache",
+   "defaults": {
+    "home": "MayBeAbsent (unverified)",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "BranchCache content caching",
+   "depends_on": [
+    "http"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Enterprise only",
+   "presence": "inbox",
+   "notes": "Pro+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PenService",
+   "per_user": true,
+   "display": "PenService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Pen settings and features",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Pen buttons",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "perceptionsimulation",
+   "per_user": false,
+   "display": "Windows Perception Simulation Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Mixed Reality simulation",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Dev/WMR only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PerfHost",
+   "per_user": false,
+   "display": "Performance Counter DLL Host",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hosts remote perf counters",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Remote perf monitoring",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PhoneSvc",
+   "per_user": false,
+   "display": "Phone Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Telephony state",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Phone/VoIP integration",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PimIndexMaintenanceSvc",
+   "per_user": true,
+   "display": "Contact Data",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Indexes contacts",
+   "depends_on": [
+    "UnistoreSvc"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "People/contact search",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "pla",
+   "per_user": false,
+   "display": "Performance Logs & Alerts",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Perf logging (perfmon data collector sets)",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Perfmon logs only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PlugPlay",
+   "per_user": false,
+   "display": "Plug and Play",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Detects and configures hardware",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Hardware stops working",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PNRPAutoReg",
+   "per_user": false,
+   "display": "PNRP Machine Name Publication Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Peer name publication",
+   "depends_on": [
+    "pnrpsvc"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PNRPsvc",
+   "per_user": false,
+   "display": "Peer Name Resolution Protocol",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Peer name resolution",
+   "depends_on": [
+    "p2pimsvc"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PolicyAgent",
+   "per_user": false,
+   "display": "IPsec Policy Agent",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "IPsec policy",
+   "depends_on": [
+    "Tcpip",
+    "bfe"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "IPsec policies",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Power",
+   "per_user": false,
+   "display": "Power",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Power policy and notifications",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Power management breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PrintDeviceConfigurationService",
+   "per_user": false,
+   "display": "Print Device Configuration Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Configures print devices (24H2 protected print)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Printing setup",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PrintNotify",
+   "per_user": false,
+   "display": "Printer Extensions and Notifications",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Printer UI and notifications",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Printer pop-ups",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PrintScanBrokerService",
+   "per_user": false,
+   "display": "PrintScanBrokerService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Brokers print/scan for apps",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Printing from apps",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PrintWorkflowUserSvc",
+   "per_user": true,
+   "display": "PrintWorkflow",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Print workflow apps",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Printer apps",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ProfSvc",
+   "per_user": false,
+   "display": "User Profile Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Loads user profiles at sign-in",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Cannot sign in",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "PushToInstall",
+   "per_user": false,
+   "display": "Windows PushToInstall Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Remote Store installs",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Remote install from web Store",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "QWAVE",
+   "per_user": false,
+   "display": "Quality Windows Audio Video Experience",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network QoS for AV streaming",
+   "depends_on": [
+    "rpcss",
+    "psched"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Rarely used",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RasAuto",
+   "per_user": false,
+   "display": "Remote Access Auto Connection Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Auto-dial remote connections",
+   "depends_on": [
+    "RasMan"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy dial-up",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RasMan",
+   "per_user": false,
+   "display": "Remote Access Connection Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "VPN and dial-up connections",
+   "depends_on": [
+    "SstpSvc"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "All VPNs fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "refsdedupsvc",
+   "per_user": false,
+   "display": "ReFS Dedup Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "ReFS deduplication (24H2)",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "ReFS dedup only",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RemoteAccess",
+   "per_user": false,
+   "display": "Routing and Remote Access",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "LAN/WAN routing",
+   "depends_on": [
+    "RasMan",
+    "bfe",
+    "http",
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RemoteRegistry",
+   "per_user": false,
+   "display": "Remote Registry",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Remote registry editing",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default; keep",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RetailDemo",
+   "per_user": false,
+   "display": "Retail Demo Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Store demo mode",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Unused outside shops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RmSvc",
+   "per_user": false,
+   "display": "Radio Management Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Airplane mode and radio switches",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Airplane mode toggles break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RpcEptMapper",
+   "per_user": false,
+   "display": "RPC Endpoint Mapper",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Maps RPC endpoints",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "System fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RpcLocator",
+   "per_user": false,
+   "display": "Remote Procedure Call (RPC) Locator",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Legacy RPC name service",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Legacy",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "RpcSs",
+   "per_user": false,
+   "display": "Remote Procedure Call (RPC)",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Core RPC; almost everything depends on it",
+   "depends_on": [
+    "RpcEptMapper",
+    "DcomLaunch"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "System fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SamSs",
+   "per_user": false,
+   "display": "Security Accounts Manager",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Local accounts database",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Logon fails",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SCardSvr",
+   "per_user": false,
+   "display": "Smart Card",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Smart card readers",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Smart cards only",
+   "presence": "inbox",
+   "notes": "4 in enterprise",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ScDeviceEnum",
+   "per_user": false,
+   "display": "Smart Card Device Enumeration Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Enumerates smart card readers",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Smart cards only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Schedule",
+   "per_user": false,
+   "display": "Task Scheduler",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Runs scheduled tasks",
+   "depends_on": [
+    "RPCSS",
+    "SystemEventsBroker"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Maintenance and updates break; protected",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SCPolicySvc",
+   "per_user": false,
+   "display": "Smart Card Removal Policy",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Locks PC on card removal",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Smart cards only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SDRSVC",
+   "per_user": false,
+   "display": "Windows Backup",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Legacy Backup and Restore",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Legacy backups",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "seclogon",
+   "per_user": false,
+   "display": "Secondary Logon",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Run as different user",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Run as different user",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SecurityHealthService",
+   "per_user": false,
+   "display": "Windows Security Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Security app health",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SEMgrSvc",
+   "per_user": false,
+   "display": "Payments and NFC/SE Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "NFC payments and secure element",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "NFC payments",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SENS",
+   "per_user": false,
+   "display": "System Event Notification Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Logon/network/power events to COM",
+   "depends_on": [
+    "EventSystem"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Many dependents",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Sense",
+   "per_user": false,
+   "display": "Windows Defender Advanced Threat Protection Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Microsoft Defender for Endpoint",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "EDR (enterprise)",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SensorDataService",
+   "per_user": false,
+   "display": "Sensor Data Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Sensor data",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Sensors on 2-in-1",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SensorService",
+   "per_user": false,
+   "display": "Sensor Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Sensor management (rotation, light)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Rotation, auto brightness",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SensrSvc",
+   "per_user": false,
+   "display": "Sensor Monitoring Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Monitors sensors",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Adaptive brightness",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SessionEnv",
+   "per_user": false,
+   "display": "Remote Desktop Configuration",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "RDP configuration",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "RDP host",
+   "presence": "inbox",
+   "notes": "Pro+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SgrmBroker",
+   "per_user": false,
+   "display": "System Guard Runtime Monitor Broker",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "System Guard runtime integrity",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security",
+   "presence": "inbox",
+   "notes": "Protected; removed in some 24H2 builds per community, unverified",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SharedAccess",
+   "per_user": false,
+   "display": "Internet Connection Sharing (ICS)",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Internet sharing, used by Mobile Hotspot",
+   "depends_on": [
+    "Netman",
+    "WinMgmt"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Hotspot breaks",
+   "presence": "inbox",
+   "notes": "WinUtil sets Disabled: conflict",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SharedRealitySvc",
+   "per_user": false,
+   "display": "Spatial Data Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Mixed Reality spatial data",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "WMR only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ShellHWDetection",
+   "per_user": false,
+   "display": "Shell Hardware Detection",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "AutoPlay events",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "AutoPlay stops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "shpamsvc",
+   "per_user": false,
+   "display": "Shared PC Account Manager",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Shared PC mode",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "smphost",
+   "per_user": false,
+   "display": "Microsoft Storage Spaces SMP",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Storage Spaces management provider",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Storage Spaces management",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SmsRouter",
+   "per_user": false,
+   "display": "Microsoft Windows SMS Router Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Routes SMS",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "SMS only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SNMPTrap",
+   "per_user": false,
+   "display": "SNMP Trap",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Receives SNMP traps",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "SNMP only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "spectrum",
+   "per_user": false,
+   "display": "Windows Perception Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Spatial perception for MR",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "WMR only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Spooler",
+   "per_user": false,
+   "display": "Print Spooler",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Printing, including PDF printer",
+   "depends_on": [
+    "RPCSS",
+    "http"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "All printing stops",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "sppsvc",
+   "per_user": false,
+   "display": "Software Protection",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Windows activation and licensing",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Activation fails",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SSDPSRV",
+   "per_user": false,
+   "display": "SSDP Discovery",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Discovers UPnP devices",
+   "depends_on": [
+    "HTTP",
+    "NSI"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "DLNA/UPnP discovery",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ssh-agent",
+   "per_user": false,
+   "display": "OpenSSH Authentication Agent",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Holds SSH keys",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "sshd",
+   "per_user": false,
+   "display": "OpenSSH SSH Server",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "SSH server",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only with OpenSSH Server capability",
+   "presence": "optional",
+   "notes": "Optional capability",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SstpSvc",
+   "per_user": false,
+   "display": "Secure Socket Tunneling Protocol Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "SSTP VPN",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "SSTP VPN; RasMan depends",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "StateRepository",
+   "per_user": false,
+   "display": "State Repository Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "App state database",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Start and apps break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "StiSvc",
+   "per_user": false,
+   "display": "Windows Image Acquisition (WIA)",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Scanners and cameras",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Scanners",
+   "presence": "inbox",
+   "notes": "Some sources show A",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "StorSvc",
+   "per_user": false,
+   "display": "Storage Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Storage Sense, app install location",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Manual is safe",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "svsvc",
+   "per_user": false,
+   "display": "Spot Verifier",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Verifies file system corruption",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Disk repair",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "swprv",
+   "per_user": false,
+   "display": "Microsoft Software Shadow Copy Provider",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Shadow copies",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Restore points and backups fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SysMain",
+   "per_user": false,
+   "display": "SysMain",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Prefetch and memory tuning",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Slower launches on HDD/low RAM; benefit of disabling unproven",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "SystemEventsBroker",
+   "per_user": false,
+   "display": "System Events Broker",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Events for background tasks",
+   "depends_on": [
+    "RpcEptMapper"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Core broker",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TabletInputService",
+   "per_user": false,
+   "display": "Touch Keyboard and Handwriting Panel Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Touch keyboard, handwriting, emoji panel",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Emoji panel and IME input",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TapiSrv",
+   "per_user": false,
+   "display": "Telephony",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Telephony API",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Fax/legacy telephony",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TermService",
+   "per_user": false,
+   "display": "Remote Desktop Services",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "RDP host",
+   "depends_on": [
+    "RPCSS"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "RDP into this PC",
+   "presence": "inbox",
+   "notes": "Home: client only",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TextInputManagementService",
+   "per_user": false,
+   "display": "Text Input Management Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Text input, IME",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Typing breaks",
+   "presence": "optional",
+   "notes": "22H2+",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Themes",
+   "per_user": false,
+   "display": "Themes",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Visual themes",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "UI looks broken",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TieringEngineService",
+   "per_user": false,
+   "display": "Storage Tiers Management",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Storage Spaces tiering",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Storage Spaces only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TimeBrokerSvc",
+   "per_user": false,
+   "display": "Time Broker",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Timed background tasks",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Background tasks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TokenBroker",
+   "per_user": false,
+   "display": "Web Account Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Microsoft account and work account sign-in for apps",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "App sign-ins break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TrkWks",
+   "per_user": false,
+   "display": "Distributed Link Tracking Client",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Repairs shortcuts to moved files on NTFS",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Manual safe",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TroubleshootingSvc",
+   "per_user": false,
+   "display": "Recommended Troubleshooting Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Recommended troubleshooters",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Troubleshooters",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "TrustedInstaller",
+   "per_user": false,
+   "display": "Windows Modules Installer",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Installs Windows updates and components",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Updates fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "tzautoupdate",
+   "per_user": false,
+   "display": "Auto Time Zone Updater",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "Automatic time zone",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UdkUserSvc",
+   "per_user": true,
+   "display": "Udk User Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Shell UI components (Start, search)",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Shell breaks",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UevAgentService",
+   "per_user": false,
+   "display": "User Experience Virtualization Service",
+   "defaults": {
+    "home": "Disabled",
+    "pro": "Disabled",
+    "enterprise": "Disabled"
+   },
+   "start_code": "Disabled",
+   "trigger": false,
+   "delayed": false,
+   "description": "UE-V settings roaming",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Disabled by default",
+   "presence": "inbox",
+   "notes": "Enterprise",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "uhssvc",
+   "per_user": false,
+   "display": "Microsoft Update Health Service",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Update health remediation",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Update health fixes",
+   "presence": "optional",
+   "notes": "Installed via KB",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UmRdpService",
+   "per_user": false,
+   "display": "Remote Desktop Services UserMode Port Redirector",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "RDP device redirection",
+   "depends_on": [
+    "TermService"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "RDP",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UnistoreSvc",
+   "per_user": true,
+   "display": "User Data Storage",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "User data for contacts/mail",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Mail/People",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "upnphost",
+   "per_user": false,
+   "display": "UPnP Device Host",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hosts UPnP devices",
+   "depends_on": [
+    "SSDPSRV",
+    "HTTP"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Hosting UPnP",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UserDataSvc",
+   "per_user": true,
+   "display": "User Data Access",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "App access to user data",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Mail/People",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UserManager",
+   "per_user": false,
+   "display": "User Manager",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "User runtime components",
+   "depends_on": [
+    "RpcSs",
+    "ProfSvc"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Start and logon break",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "UsoSvc",
+   "per_user": false,
+   "display": "Update Orchestrator Service",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Schedules Windows Updates",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Updates stop",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "VacSvc",
+   "per_user": false,
+   "display": "Volumetric Audio Compositor Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Spatial audio for MR",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "WMR only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "VaultSvc",
+   "per_user": false,
+   "display": "Credential Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Stores saved credentials",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Saved passwords lost",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vds",
+   "per_user": false,
+   "display": "Virtual Disk",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Disk management",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Disk Management",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmcompute",
+   "per_user": false,
+   "display": "Hyper-V Host Compute Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Hyper-V containers, WSL2, Sandbox",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "WSL2/Docker/Sandbox",
+   "presence": "optional",
+   "notes": "Feature-gated",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicguestinterface",
+   "per_user": false,
+   "display": "Hyper-V Guest Service Interface",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Guest services when this PC is a VM",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicheartbeat",
+   "per_user": false,
+   "display": "Hyper-V Heartbeat Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "VM heartbeat",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmickvpexchange",
+   "per_user": false,
+   "display": "Hyper-V Data Exchange Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "VM data exchange",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicrdv",
+   "per_user": false,
+   "display": "Hyper-V Remote Desktop Virtualization Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Enhanced session",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicshutdown",
+   "per_user": false,
+   "display": "Hyper-V Guest Shutdown Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Host-initiated shutdown",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmictimesync",
+   "per_user": false,
+   "display": "Hyper-V Time Synchronization Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "VM time sync",
+   "depends_on": [
+    "VmGid"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicvmsession",
+   "per_user": false,
+   "display": "Hyper-V PowerShell Direct Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "PowerShell Direct",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmicvss",
+   "per_user": false,
+   "display": "Hyper-V Volume Shadow Copy Requestor",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "VM backups",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only inside VMs",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "vmms",
+   "per_user": false,
+   "display": "Hyper-V Virtual Machine Management",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Manages Hyper-V VMs",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Hyper-V",
+   "presence": "optional",
+   "notes": "Feature-gated",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "VSS",
+   "per_user": false,
+   "display": "Volume Shadow Copy",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Shadow copies for backups and restore points",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Restore points fail (our safety net)",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "W32Time",
+   "per_user": false,
+   "display": "Windows Time",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Clock synchronization",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Clock drift breaks TLS/Kerberos",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "W3SVC",
+   "per_user": false,
+   "display": "World Wide Web Publishing Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "IIS web server",
+   "depends_on": [
+    "WAS",
+    "HTTP"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only with IIS",
+   "presence": "optional",
+   "notes": "Optional feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WaaSMedicSvc",
+   "per_user": false,
+   "display": "Windows Update Medic Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Repairs Windows Update components",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Protected; re-enables update services",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WalletService",
+   "per_user": false,
+   "display": "WalletService",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Wallet clients",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Rare",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WarpJITSvc",
+   "per_user": false,
+   "display": "Warp JIT Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "JIT for WARP software rendering",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Software GPU rendering",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WAS",
+   "per_user": false,
+   "display": "Windows Process Activation Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "IIS process activation",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Only with IIS/WCF",
+   "presence": "optional",
+   "notes": "Optional feature",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wbengine",
+   "per_user": false,
+   "display": "Block Level Backup Engine Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Windows Backup image",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "System image backup",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WbioSrvc",
+   "per_user": false,
+   "display": "Windows Biometric Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Fingerprint/face sign-in",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Hello biometrics",
+   "presence": "inbox",
+   "notes": "A on devices with biometric hardware",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Wcmsvc",
+   "per_user": false,
+   "display": "Windows Connection Manager",
+   "defaults": {
+    "home": "AutomaticTrigger",
+    "pro": "AutomaticTrigger",
+    "enterprise": "AutomaticTrigger"
+   },
+   "start_code": "AutomaticTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Chooses network connections",
+   "depends_on": [
+    "RpcSs",
+    "NSI"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Wi-Fi/cellular switching breaks",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wcncsvc",
+   "per_user": false,
+   "display": "Windows Connect Now - Config Registrar",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "WPS setup",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "WPS only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WdiServiceHost",
+   "per_user": false,
+   "display": "Diagnostic Service Host",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Diagnostics for DPS",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Diagnostics",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WdiSystemHost",
+   "per_user": false,
+   "display": "Diagnostic System Host",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Diagnostics for DPS",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Diagnostics",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WdNisSvc",
+   "per_user": false,
+   "display": "Microsoft Defender Antivirus Network Inspection Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Network intrusion protection",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WebClient",
+   "per_user": false,
+   "display": "WebClient",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "WebDAV client",
+   "depends_on": [
+    "MRxDAV"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "WebDAV/SharePoint mapped drives",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "webthreatdefsvc",
+   "per_user": false,
+   "display": "Web Threat Defense Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "SmartScreen phishing protection",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Phishing protection",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "webthreatdefusersvc",
+   "per_user": true,
+   "display": "Web Threat Defense User Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Per-user phishing protection",
+   "depends_on": [],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Phishing protection",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Wecsvc",
+   "per_user": false,
+   "display": "Windows Event Collector",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Collects events from remote sources",
+   "depends_on": [
+    "HTTP"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Event forwarding",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WEPHOSTSVC",
+   "per_user": false,
+   "display": "Windows Encryption Provider Host Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Encryption providers",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Encryption providers",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wercplsupport",
+   "per_user": false,
+   "display": "Problem Reports Control Panel Support",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Problem reports UI",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Reports UI",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WerSvc",
+   "per_user": false,
+   "display": "Windows Error Reporting Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Uploads crash reports",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Crash reports",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WFDSConMgrSvc",
+   "per_user": false,
+   "display": "Wi-Fi Direct Services Connection Manager Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Wi-Fi Direct",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Miracast, Wi-Fi Direct printers",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "whesvc",
+   "per_user": false,
+   "display": "Windows Health and Optimized Experiences",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Health and optimization experiences (24H2)",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "unclear purpose",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WiaRpc",
+   "per_user": false,
+   "display": "Still Image Acquisition Events",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Scanner/camera button events",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Scanner buttons",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WinDefend",
+   "per_user": false,
+   "display": "Microsoft Defender Antivirus Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Antivirus",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WinHttpAutoProxySvc",
+   "per_user": false,
+   "display": "WinHTTP Web Proxy Auto-Discovery Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Proxy auto-discovery",
+   "depends_on": [
+    "Dhcp"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Network/proxy breaks; protected",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "Winmgmt",
+   "per_user": false,
+   "display": "Windows Management Instrumentation",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "WMI management",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Many tools and services fail",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WinRM",
+   "per_user": false,
+   "display": "Windows Remote Management (WS-Management)",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "PowerShell remoting",
+   "depends_on": [
+    "RPCSS",
+    "HTTP"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Remoting",
+   "presence": "inbox",
+   "notes": "4 enterprise",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wisvc",
+   "per_user": false,
+   "display": "Windows Insider Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Insider builds",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Insider only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WlanSvc",
+   "per_user": false,
+   "display": "WLAN AutoConfig",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Wi-Fi",
+   "depends_on": [
+    "nativewifip",
+    "RpcSs",
+    "Ndisuio"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "No Wi-Fi",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wlidsvc",
+   "per_user": false,
+   "display": "Microsoft Account Sign-in Assistant",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Microsoft account sign-in",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "MSA sign-in and Store",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wlpasvc",
+   "per_user": false,
+   "display": "Local Profile Assistant Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "eSIM profiles",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "eSIM only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WManSvc",
+   "per_user": false,
+   "display": "Windows Management Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Provisioning and management",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Provisioning packages",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wmiApSrv",
+   "per_user": false,
+   "display": "WMI Performance Adapter",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "WMI perf counters",
+   "depends_on": [],
+   "risk": 1,
+   "risk_label": "Safe to set Manual",
+   "risk_reason": "Perf tooling",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WMPNetworkSvc",
+   "per_user": false,
+   "display": "Windows Media Player Network Sharing Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "DLNA media sharing",
+   "depends_on": [
+    "http",
+    "WSearch"
+   ],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Media sharing",
+   "presence": "optional",
+   "notes": "Absent with WMP removal",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "workfolderssvc",
+   "per_user": false,
+   "display": "Work Folders",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Work Folders sync",
+   "depends_on": [],
+   "risk": 2,
+   "risk_label": "Safe to Disable if feature unused",
+   "risk_reason": "Enterprise only",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WpcMonSvc",
+   "per_user": false,
+   "display": "Parental Controls",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Family Safety enforcement",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Family Safety",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WPDBusEnum",
+   "per_user": false,
+   "display": "Portable Device Enumerator Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "MTP devices, removable storage policy",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Phones/cameras over MTP",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WpnService",
+   "per_user": false,
+   "display": "Windows Push Notifications System Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Push notifications",
+   "depends_on": [
+    "rpcss"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Notifications",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WpnUserService",
+   "per_user": true,
+   "display": "Windows Push Notifications User Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Per-user toasts",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Notifications",
+   "presence": "inbox",
+   "notes": "per-user template",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wscsvc",
+   "per_user": false,
+   "display": "Security Center",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "Security status",
+   "depends_on": [
+    "RpcSs"
+   ],
+   "risk": 0,
+   "risk_label": "Never touch (boot/security critical)",
+   "risk_reason": "Security status",
+   "presence": "inbox",
+   "notes": "Protected",
+   "protected": true,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WSearch",
+   "per_user": false,
+   "display": "Windows Search",
+   "defaults": {
+    "home": "AutomaticDelayed",
+    "pro": "AutomaticDelayed",
+    "enterprise": "AutomaticDelayed"
+   },
+   "start_code": "AutomaticDelayed",
+   "trigger": false,
+   "delayed": true,
+   "description": "File/content indexing",
+   "depends_on": [
+    "RPCSS"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Start/Outlook search slow or broken",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WSLService",
+   "per_user": false,
+   "display": "WSL Service",
+   "defaults": {
+    "home": "Automatic",
+    "pro": "Automatic",
+    "enterprise": "Automatic"
+   },
+   "start_code": "Automatic",
+   "trigger": false,
+   "delayed": false,
+   "description": "Store WSL service",
+   "depends_on": [],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "WSL breaks for developers",
+   "presence": "optional",
+   "notes": "Installed with Store WSL; start type unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "wuauserv",
+   "per_user": false,
+   "display": "Windows Update",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Downloads and installs updates",
+   "depends_on": [
+    "rpcss"
+   ],
+   "risk": 4,
+   "risk_label": "Breaks updates, Store, login or security",
+   "risk_reason": "Updates stop",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "WwanSvc",
+   "per_user": false,
+   "display": "WWAN AutoConfig",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Mobile broadband",
+   "depends_on": [
+    "RpcSs",
+    "NdisUio"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "LTE/5G modems",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "XblAuthManager",
+   "per_user": false,
+   "display": "Xbox Live Auth Manager",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Xbox sign-in",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Xbox games/app",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "XblGameSave",
+   "per_user": false,
+   "display": "Xbox Live Game Save",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Xbox cloud saves",
+   "depends_on": [
+    "UserManager",
+    "XblAuthManager"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Cloud saves",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "XboxGipSvc",
+   "per_user": false,
+   "display": "Xbox Accessory Management Service",
+   "defaults": {
+    "home": "ManualTrigger",
+    "pro": "ManualTrigger",
+    "enterprise": "ManualTrigger"
+   },
+   "start_code": "ManualTrigger",
+   "trigger": true,
+   "delayed": false,
+   "description": "Xbox controllers",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Xbox controller config",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "XboxNetApiSvc",
+   "per_user": false,
+   "display": "Xbox Live Networking Service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Xbox networking/NAT",
+   "depends_on": [
+    "BFE",
+    "mpssvc",
+    "IKEEXT",
+    "KeyIso"
+   ],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Xbox multiplayer",
+   "presence": "inbox",
+   "notes": "",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  },
+  {
+   "name": "ZTHELPER",
+   "per_user": false,
+   "display": "ZTDNS Helper service",
+   "defaults": {
+    "home": "Manual",
+    "pro": "Manual",
+    "enterprise": "Manual"
+   },
+   "start_code": "Manual",
+   "trigger": false,
+   "delayed": false,
+   "description": "Zero Trust DNS (24H2+)",
+   "depends_on": [],
+   "risk": 3,
+   "risk_label": "Situational, breaks a visible feature",
+   "risk_reason": "Enterprise ZTDNS",
+   "presence": "optional",
+   "notes": "24H2+, unverified",
+   "protected": false,
+   "verified": false,
+   "verification": "unverified: not yet confirmed on a clean 23H2/24H2/25H2 VM"
+  }
+ ]
+}
