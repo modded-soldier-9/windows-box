@@ -37,8 +37,8 @@ internal static class ElevatorHost
             return args[0] switch
             {
                 "--ping" => Ping(),
-                "--apply-plan" => ApplyPlan(RequirePath(args, 1)),
-                "--rollback-journal" => Rollback(RequirePath(args, 1)),
+                "--apply-plan" => RequireAdminThen(() => ApplyPlan(RequirePath(args, 1))),
+                "--rollback-journal" => RequireAdminThen(() => Rollback(RequirePath(args, 1))),
                 _ => Fail($"Unknown argument: {args[0]}"),
             };
         }
@@ -46,6 +46,22 @@ internal static class ElevatorHost
         {
             return Fail(ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Mutating commands require an elevated admin token on Windows.
+    /// Non-Windows hosts (CI) are allowed for dry acknowledgment only.
+    /// </summary>
+    private static int RequireAdminThen(Func<int> action)
+    {
+        if (OperatingSystem.IsWindows() && !IsElevated())
+        {
+            return Fail(
+                "Refusing to mutate services: Elevator is not running elevated. " +
+                "Relaunch via UAC (ElevatorClient) or an elevated shell. Non-admins cannot apply or rollback.");
+        }
+
+        return action();
     }
 
     private static string RequirePath(string[] args, int index)

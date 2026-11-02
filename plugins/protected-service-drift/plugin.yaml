@@ -1,0 +1,11 @@
+id: plugin.protected-service-drift
+name: Protected service presence
+description: >
+  Reports catalog services marked never/leave that are absent from the live SCM.
+  Builtin sample for the service-check extension point.
+version: 1.0.0
+kind: service-check
+builtin: true
+entry: WindowsBox.Core.Plugins.Builtin.ProtectedServiceDriftPlugin
+sources:
+  - https://github.com/modded-soldier-9/windows-box

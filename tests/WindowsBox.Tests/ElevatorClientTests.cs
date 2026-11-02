@@ -56,10 +56,59 @@ public class ElevatorClientTests
             var result = await client.ApplyJournalAsync(journal, requireElevation: false);
             Assert.True(result.Ok);
             Assert.True(File.Exists(Path.Combine(work, $"{journal.Id}-plan.json")));
+            Assert.NotNull(client.LastSnapshot);
+            Assert.Equal("pre-apply", client.LastSnapshot!.Purpose);
+            Assert.True(File.Exists(client.LastSnapshot.ManifestPath));
+            Assert.True(Directory.Exists(client.LastSnapshot.RestoreDirectory));
         }
         finally
         {
             Directory.Delete(work, recursive: true);
+        }
+    }
+}
+
+public class PreApplySnapshotterTests
+{
+    [Fact]
+    public void Create_writes_restore_kit_and_manifest_before_mutation()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "wbox-snap-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var journal = new ApplyJournal
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                CreatedAt = DateTimeOffset.UtcNow,
+                Profile = "Safe",
+                MachineBuild = "26100",
+                Edition = "Professional",
+                Entries =
+                [
+                    new JournalEntry
+                    {
+                        ItemId = "svc.diagtrack",
+                        ServiceName = "DiagTrack",
+                        PriorStartType = ServiceStartType.Automatic,
+                        TargetStartType = ServiceStartType.Manual,
+                        RegistryExport = "Windows Registry Editor Version 5.00\r\n",
+                        Status = JournalEntryStatus.Pending,
+                    },
+                ],
+            };
+
+            var snap = new PreApplySnapshotter(dir).Create(journal, "pre-apply");
+            Assert.Equal(journal.Id, snap.JournalId);
+            Assert.True(File.Exists(snap.ManifestPath));
+            Assert.True(Directory.Exists(snap.RestoreDirectory));
+            Assert.True(File.Exists(Path.Combine(snap.RestoreDirectory!, "restore-services.cmd")));
+        }
+        finally
+        {
+            if (Directory.Exists(dir))
+            {
+                Directory.Delete(dir, recursive: true);
+            }
         }
     }
 }

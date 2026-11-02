@@ -10,7 +10,7 @@
         <NavigationView
             x:Name="RootNav"
             PaneDisplayMode="Left"
-            IsSettingsVisible="False"
+            IsSettingsVisible="True"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="True"
             OpenPaneLength="240"
@@ -24,6 +24,7 @@
                 <NavigationViewItem Content="Startup" Tag="startup" Icon="Play" />
                 <NavigationViewItem Content="Tweaks" Tag="tweaks" Icon="Edit" />
                 <NavigationViewItem Content="History" Tag="history" Icon="Clock" />
+                <NavigationViewItem Content="Plugins" Tag="plugins" Icon="AllApps" />
             </NavigationView.MenuItems>
             <NavigationView.PaneFooter>
                 <TextBlock

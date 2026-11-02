@@ -36,6 +36,8 @@ Inspired by Chris Titus Tech’s [WinUtil](https://github.com/ChrisTitusTech/win
 
 ## Quick start
 
+Full walkthrough: **[docs/quick-start.md](docs/quick-start.md)**.
+
 ```bash
 dotnet test tests/WindowsBox.Tests/WindowsBox.Tests.csproj
 dotnet run --project src/WindowsBox.Cli -- catalog validate --catalog catalog/services
@@ -55,10 +57,13 @@ wbox netcheck
 
 | Doc | Why |
 |-|-|
+| [docs/quick-start.md](docs/quick-start.md) | First-run guide (offline-first) |
 | [MASTER-PLAN.md](docs/MASTER-PLAN.md) | Source of truth |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers & pipeline |
 | [docs/wiki/](docs/wiki/) | Wiki source (architecture, engine, modules, catalog) |
 | [docs/signing.md](docs/signing.md) | What Ron must supply for Authenticode |
+| [docs/network-safeguards.md](docs/network-safeguards.md) | Network features: opt-in, off by default |
+| [docs/trust-guide.md](docs/trust-guide.md) | Inspect `install.ps1` before `irm \| iex` |
 | [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) | Community |
 | [docs/research/](docs/research/) | Fact-checked landscape (kept in-repo) |
 

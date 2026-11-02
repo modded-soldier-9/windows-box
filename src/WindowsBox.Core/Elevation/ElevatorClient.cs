@@ -21,19 +21,29 @@ public sealed class ElevatorClient
 
     private readonly string _elevatorPath;
     private readonly string _workDirectory;
+    private readonly PreApplySnapshotter? _snapshotter;
 
-    public ElevatorClient(string elevatorPath, string? workDirectory = null)
+    public ElevatorClient(
+        string elevatorPath,
+        string? workDirectory = null,
+        PreApplySnapshotter? snapshotter = null)
     {
         _elevatorPath = elevatorPath;
         _workDirectory = workDirectory ?? Path.Combine(Path.GetTempPath(), "WindowsBox", "elevator");
         Directory.CreateDirectory(_workDirectory);
+        _snapshotter = snapshotter ?? new PreApplySnapshotter(Path.Combine(_workDirectory, "backups"));
     }
+
+    public PreApplySnapshot? LastSnapshot { get; private set; }
 
     public async Task<ElevatorClientResult> ApplyJournalAsync(
         ApplyJournal journal,
         bool requireElevation = true,
         CancellationToken cancellationToken = default)
     {
+        // Snapshot before any elevated mutation — undo must survive a mid-batch crash.
+        LastSnapshot = _snapshotter?.Create(journal, purpose: "pre-apply");
+
         var plan = new ElevatorPlanDto
         {
             Id = journal.Id,
@@ -58,6 +68,8 @@ public sealed class ElevatorClient
         bool requireElevation = true,
         CancellationToken cancellationToken = default)
     {
+        LastSnapshot = _snapshotter?.Create(journal, purpose: "pre-rollback");
+
         var path = Path.Combine(_workDirectory, $"{journal.Id}-rollback.json");
         await File.WriteAllTextAsync(path, JsonSerializer.Serialize(journal, JsonOptions), cancellationToken);
         return await RunAsync(["--rollback-journal", path], requireElevation, cancellationToken);

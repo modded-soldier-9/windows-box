@@ -5,8 +5,11 @@ using WindowsBox.Core.Engine.Journal;
 using WindowsBox.Core.Engine.Restore;
 using WindowsBox.Core.Engine.Undo;
 using WindowsBox.Core.Engine.Verify;
+using WindowsBox.Core.Install;
 using WindowsBox.Core.Network;
 using WindowsBox.Core.Platform;
+using WindowsBox.Core.Presentation;
+using WindowsBox.Core.Scheduling;
 
 return await WboxApp.RunAsync(args);
 
@@ -35,6 +38,7 @@ internal static class WboxApp
                 "drift" => await RunDriftAsync(args.Skip(1).ToArray()),
                 "journals" => await RunJournalsAsync(args.Skip(1).ToArray()),
                 "netcheck" => RunNetCheck(args.Skip(1).ToArray()),
+                "uninstall" => RunUninstall(args.Skip(1).ToArray()),
                 _ => Unknown(command),
             };
         }
@@ -165,13 +169,23 @@ internal static class WboxApp
             dryRun: dryRun,
             confirmHighRisk: confirm);
 
-        Console.WriteLine(dryRun ? "Dry-run journal saved (no mutations)." : "Apply complete.");
-        Console.WriteLine($"Journal: {result.Journal.Id}");
-        Console.WriteLine($"Health: {(result.Health.Passed ? "passed" : "FAILED")}");
-        Console.WriteLine($"Verify: {(result.Verify.Passed ? "passed" : "FAILED")}");
-        if (result.Restore is not null)
+        if (dryRun)
         {
-            Console.WriteLine($"Offline restore kit: {result.Restore.Directory}");
+            var plan = result.Plan ?? pipeline.DetectAndPreview(catalog, profile);
+            Console.WriteLine(DryRunPresenter.Format(plan, result));
+            Console.WriteLine();
+            Console.WriteLine("Dry-run complete — no services mutated.");
+        }
+        else
+        {
+            Console.WriteLine("Apply complete.");
+            Console.WriteLine($"Journal: {result.Journal.Id}");
+            Console.WriteLine($"Health: {(result.Health.Passed ? "passed" : "FAILED")}");
+            Console.WriteLine($"Verify: {(result.Verify.Passed ? "passed" : "FAILED")}");
+            if (result.Restore is not null)
+            {
+                Console.WriteLine($"Offline restore kit: {result.Restore.Directory}");
+            }
         }
 
         return result.Health.Passed && (dryRun || result.Verify.Passed) ? 0 : 4;
@@ -353,6 +367,59 @@ internal static class WboxApp
         return 0;
     }
 
+    private static int RunUninstall(string[] args)
+    {
+        var artifactDir = GetOption(args, "--artifact-dir")
+                          ?? Path.Combine(Path.GetTempPath(), "WindowsBox", "verify-task");
+        var programData = GetOption(args, "--program-data") ?? DefaultProgramDataDir();
+        var removeData = HasFlag(args, "--remove-program-data");
+        var planOnly = HasFlag(args, "--plan");
+
+        var uninstaller = new Uninstaller(
+            new FileVerifyTaskInstaller(artifactDir),
+            programDataRoot: programData);
+
+        if (planOnly)
+        {
+            var plan = uninstaller.Plan();
+            Console.WriteLine($"Verify task: {plan.VerifyTaskPath}");
+            foreach (var action in plan.Actions)
+            {
+                Console.WriteLine($"  - {action}");
+            }
+
+            Console.WriteLine("No changes made (--plan). Also see build/uninstall.ps1.");
+            return 0;
+        }
+
+        var result = uninstaller.Run(removeProgramData: removeData);
+        foreach (var line in result.Completed)
+        {
+            Console.WriteLine($"OK  {line}");
+        }
+
+        foreach (var line in result.Skipped)
+        {
+            Console.WriteLine($"skip {line}");
+        }
+
+        Console.WriteLine(result.Detail);
+        Console.WriteLine("Note: elevated schtasks/registry deletion on Windows uses build/uninstall.ps1.");
+        return result.Ok ? 0 : 1;
+    }
+
+    private static string DefaultProgramDataDir()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "WindowsBox");
+        }
+
+        return Path.Combine(Path.GetTempPath(), "WindowsBox");
+    }
+
     private static void PrintHelp()
     {
         Console.WriteLine(
@@ -369,6 +436,7 @@ internal static class WboxApp
               wbox verify [--quiet] [<journal-id>]
               wbox drift [--quiet]
               wbox netcheck [--resolve] [--loopback]
+              wbox uninstall [--plan] [--remove-program-data]
               wbox journals
               wbox version
 

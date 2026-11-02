@@ -16,6 +16,12 @@ public sealed partial class MainWindow : Window
 
     private void RootNav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        if (args.IsSettingsSelected)
+        {
+            ContentFrame.Navigate(typeof(SettingsPage));
+            return;
+        }
+
         if (args.SelectedItem is not NavigationViewItem item || item.Tag is not string tag)
         {
             return;
@@ -30,6 +36,8 @@ public sealed partial class MainWindow : Window
             "startup" => typeof(StartupPage),
             "tweaks" => typeof(TweaksPage),
             "history" => typeof(HistoryPage),
+            "plugins" => typeof(PluginsPage),
+            "settings" => typeof(SettingsPage),
             _ => typeof(HomePage),
         };
 
