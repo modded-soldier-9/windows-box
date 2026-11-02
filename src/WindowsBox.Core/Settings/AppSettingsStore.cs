@@ -78,5 +78,6 @@ public sealed class FileAppSettingsStore : IAppSettingsStore
     UseStringEnumConverter = true)]
 [JsonSerializable(typeof(AppSettings))]
 [JsonSerializable(typeof(UpdatePreference))]
+[JsonSerializable(typeof(UpdateChannel))]
 [JsonSerializable(typeof(LogLevel))]
 internal partial class SettingsJsonContext : JsonSerializerContext;

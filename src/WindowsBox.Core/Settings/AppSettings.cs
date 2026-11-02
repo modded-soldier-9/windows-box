@@ -42,6 +42,15 @@ public sealed class AppSettings
 
     /// <summary>Minimum log level written to the local log file. Default Info.</summary>
     public LogLevel LogLevel { get; set; } = LogLevel.Info;
+
+    /// <summary>Update channel. Stable is default. Still requires CheckForUpdatesEnabled.</summary>
+    public UpdateChannel UpdateChannel { get; set; } = UpdateChannel.Stable;
+}
+
+public enum UpdateChannel
+{
+    Stable = 0,
+    Beta = 1,
 }
 
 public enum UpdatePreference

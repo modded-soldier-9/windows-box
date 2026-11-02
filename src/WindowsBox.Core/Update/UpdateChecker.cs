@@ -26,12 +26,15 @@ public sealed class UpdateCheckResult
 /// </summary>
 public sealed class UpdateChecker
 {
-    public const string DefaultReleasesApi =
+    public const string DefaultStableReleasesApi =
         "https://api.github.com/repos/modded-soldier-9/windows-box/releases/latest";
+
+    public const string DefaultBetaReleasesApi =
+        "https://api.github.com/repos/modded-soldier-9/windows-box/releases";
 
     private readonly IAppSettingsStore _settings;
     private readonly Func<HttpClient>? _httpClientFactory;
-    private readonly string _releasesApiUrl;
+    private readonly string? _releasesApiUrlOverride;
     private readonly string _currentVersion;
 
     public UpdateChecker(
@@ -43,8 +46,11 @@ public sealed class UpdateChecker
         _settings = settings;
         _currentVersion = currentVersion;
         _httpClientFactory = httpClientFactory;
-        _releasesApiUrl = releasesApiUrl ?? DefaultReleasesApi;
+        _releasesApiUrlOverride = releasesApiUrl;
     }
+
+    public static string ResolveApiUrl(UpdateChannel channel) =>
+        channel == UpdateChannel.Beta ? DefaultBetaReleasesApi : DefaultStableReleasesApi;
 
     /// <summary>
     /// Returns immediately without network when update checks are disabled (default)
@@ -87,17 +93,32 @@ public sealed class UpdateChecker
             };
         }
 
+        var apiUrl = _releasesApiUrlOverride ?? ResolveApiUrl(settings.UpdateChannel);
         using var client = _httpClientFactory();
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("WindowsBox", _currentVersion));
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
 
-        using var response = await client.GetAsync(_releasesApiUrl, cancellationToken);
+        using var response = await client.GetAsync(apiUrl, cancellationToken);
         response.EnsureSuccessStatusCode();
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        var release = await JsonSerializer.DeserializeAsync(
-            stream,
-            UpdateJsonContext.Default.GitHubReleaseDto,
-            cancellationToken);
+
+        GitHubReleaseDto? release;
+        if (settings.UpdateChannel == UpdateChannel.Beta && _releasesApiUrlOverride is null)
+        {
+            var releases = await JsonSerializer.DeserializeAsync(
+                stream,
+                UpdateJsonContext.Default.GitHubReleaseDtoArray,
+                cancellationToken) ?? [];
+            // Prefer prerelease when on Beta; fall back to newest.
+            release = releases.FirstOrDefault(r => r.Prerelease) ?? releases.FirstOrDefault();
+        }
+        else
+        {
+            release = await JsonSerializer.DeserializeAsync(
+                stream,
+                UpdateJsonContext.Default.GitHubReleaseDto,
+                cancellationToken);
+        }
 
         var tag = release?.TagName?.Trim();
         settings.LastUpdateCheckUtc = DateTimeOffset.UtcNow;
@@ -108,6 +129,7 @@ public sealed class UpdateChecker
                         !string.Equals(tag, _currentVersion, StringComparison.OrdinalIgnoreCase) &&
                         !string.Equals(tag, "v" + _currentVersion, StringComparison.OrdinalIgnoreCase);
 
+        var channelLabel = settings.UpdateChannel.ToString().ToLowerInvariant();
         return new UpdateCheckResult
         {
             Performed = true,
@@ -115,8 +137,8 @@ public sealed class UpdateChecker
             ReleaseUrl = release?.HtmlUrl,
             UpdateAvailable = available,
             Message = available
-                ? $"Update available: {tag} (you have {_currentVersion}). Review the release notes before installing."
-                : $"You are on {_currentVersion}; latest reported tag is {tag ?? "(none)"}."
+                ? $"Update available on {channelLabel}: {tag} (you have {_currentVersion}). Review release notes before installing."
+                : $"Channel {channelLabel}: you are on {_currentVersion}; latest reported tag is {tag ?? "(none)"}."
         };
     }
 }
@@ -128,8 +150,12 @@ internal sealed class GitHubReleaseDto
 
     [JsonPropertyName("html_url")]
     public string? HtmlUrl { get; set; }
+
+    [JsonPropertyName("prerelease")]
+    public bool Prerelease { get; set; }
 }
 
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 [JsonSerializable(typeof(GitHubReleaseDto))]
+[JsonSerializable(typeof(GitHubReleaseDto[]))]
 internal partial class UpdateJsonContext : JsonSerializerContext;

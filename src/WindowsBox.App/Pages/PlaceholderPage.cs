@@ -245,6 +245,11 @@ public sealed class SettingsPage : ShellPage
         Width = 220,
         ItemsSource = new[] { "Manual (default)", "Automatic (check on open)" },
     };
+    private readonly ComboBox _channel = new()
+    {
+        Width = 220,
+        ItemsSource = new[] { "Stable (default)", "Beta" },
+    };
     private readonly TextBlock _status = new()
     {
         TextWrapping = TextWrapping.Wrap,
@@ -259,11 +264,13 @@ public sealed class SettingsPage : ShellPage
         _crashUpload.IsOn = settings.CrashReportUploadEnabled;
         _telemetry.IsOn = settings.TelemetryEnabled;
         _preference.SelectedIndex = settings.UpdatePreference == UpdatePreference.Automatic ? 1 : 0;
+        _channel.SelectedIndex = settings.UpdateChannel == UpdateChannel.Beta ? 1 : 0;
 
         _checkUpdates.Toggled += (_, _) => Persist();
         _crashUpload.Toggled += (_, _) => Persist();
         _telemetry.Toggled += (_, _) => Persist();
         _preference.SelectionChanged += (_, _) => Persist();
+        _channel.SelectionChanged += (_, _) => Persist();
 
         var checkBtn = new Button { Content = "Check for updates now", Margin = new Thickness(0, 12, 0, 0) };
         checkBtn.Click += async (_, _) => await RunCheckAsync();
@@ -285,6 +292,7 @@ public sealed class SettingsPage : ShellPage
         });
         panel.Children.Add(Labeled("Check for updates", _checkUpdates));
         panel.Children.Add(Labeled("When to check", _preference));
+        panel.Children.Add(Labeled("Channel", _channel));
         panel.Children.Add(checkBtn);
 
         panel.Children.Add(new TextBlock
@@ -341,6 +349,9 @@ public sealed class SettingsPage : ShellPage
         settings.UpdatePreference = _preference.SelectedIndex == 1
             ? UpdatePreference.Automatic
             : UpdatePreference.Manual;
+        settings.UpdateChannel = _channel.SelectedIndex == 1
+            ? UpdateChannel.Beta
+            : UpdateChannel.Stable;
         _store.Save(settings);
         _status.Text =
             "Saved. Updates: " + (settings.CheckForUpdatesEnabled ? settings.UpdatePreference.ToString() : "off") +

@@ -118,6 +118,48 @@ public class UpdateSettingsTests
     }
 
     [Fact]
+    public void ResolveApiUrl_differs_for_stable_and_beta()
+    {
+        Assert.Contains("/releases/latest", UpdateChecker.ResolveApiUrl(UpdateChannel.Stable), StringComparison.Ordinal);
+        Assert.Equal(
+            UpdateChecker.DefaultBetaReleasesApi,
+            UpdateChecker.ResolveApiUrl(UpdateChannel.Beta));
+    }
+
+    [Fact]
+    public async Task Beta_channel_prefers_prerelease_tag()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), "wbox-upd-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var store = new FileAppSettingsStore(dir);
+            store.Save(new AppSettings
+            {
+                CheckForUpdatesEnabled = true,
+                UpdatePreference = UpdatePreference.Manual,
+                UpdateChannel = UpdateChannel.Beta,
+            });
+
+            var checker = new UpdateChecker(
+                store,
+                currentVersion: "0.1.0",
+                httpClientFactory: () => new HttpClient(new FakeReleaseListHandler()));
+
+            var result = await checker.CheckAsync(userInitiated: true);
+            Assert.True(result.Performed);
+            Assert.Equal("v0.2.0-beta.1", result.LatestTag);
+            Assert.Contains("beta", result.Message, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            if (Directory.Exists(dir))
+            {
+                Directory.Delete(dir, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
     public async Task Automatic_preference_checks_on_open_when_opted_in()
     {
         var dir = Path.Combine(Path.GetTempPath(), "wbox-upd-" + Guid.NewGuid().ToString("N"));
@@ -166,7 +208,28 @@ public class UpdateSettingsTests
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var json = $$"""{"tag_name":"{{_tag}}","html_url":"https://example.test/release"}""";
+            var json = $$"""{"tag_name":"{{_tag}}","html_url":"https://example.test/release","prerelease":false}""";
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(json, Encoding.UTF8, new MediaTypeHeaderValue("application/json")),
+            };
+            return Task.FromResult(response);
+        }
+    }
+
+    private sealed class FakeReleaseListHandler : HttpMessageHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            const string json =
+                """
+                [
+                  {"tag_name":"v0.1.9","html_url":"https://example.test/r1","prerelease":false},
+                  {"tag_name":"v0.2.0-beta.1","html_url":"https://example.test/r2","prerelease":true}
+                ]
+                """;
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new StringContent(json, Encoding.UTF8, new MediaTypeHeaderValue("application/json")),
