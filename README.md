@@ -59,6 +59,7 @@ wbox netcheck
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers & pipeline |
 | [docs/wiki/](docs/wiki/) | Wiki source (architecture, engine, modules, catalog) |
 | [docs/signing.md](docs/signing.md) | What Ron must supply for Authenticode |
+| [docs/network-safeguards.md](docs/network-safeguards.md) | Network features: opt-in, off by default |
 | [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) | Community |
 | [docs/research/](docs/research/) | Fact-checked landscape (kept in-repo) |
 

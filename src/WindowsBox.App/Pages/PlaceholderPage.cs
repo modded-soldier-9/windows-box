@@ -2,6 +2,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using WindowsBox.Core.Presentation;
+using WindowsBox.Core.Settings;
+using WindowsBox.Core.Update;
 
 namespace WindowsBox.App.Pages;
 
@@ -212,5 +214,102 @@ public sealed class HistoryPage : ShellPage
             "History",
             "Timeline of apply batches with one-click rollback from measured journal priors.",
             list);
+    }
+}
+
+/// <summary>
+/// Opt-in network preferences. Defaults keep the app fully offline.
+/// </summary>
+public sealed class SettingsPage : ShellPage
+{
+    private readonly FileAppSettingsStore _store = new(FileAppSettingsStore.DefaultDirectory());
+    private readonly ToggleSwitch _checkUpdates = new() { OnContent = "On", OffContent = "Off" };
+    private readonly ComboBox _preference = new()
+    {
+        Width = 220,
+        ItemsSource = new[] { "Manual (default)", "Automatic (check on open)" },
+    };
+    private readonly TextBlock _status = new()
+    {
+        TextWrapping = TextWrapping.Wrap,
+        Opacity = 0.9,
+        Margin = new Thickness(0, 12, 0, 0),
+    };
+
+    public SettingsPage()
+    {
+        var settings = _store.Load();
+        _checkUpdates.IsOn = settings.CheckForUpdatesEnabled;
+        _preference.SelectedIndex = settings.UpdatePreference == UpdatePreference.Automatic ? 1 : 0;
+
+        _checkUpdates.Toggled += (_, _) => Persist();
+        _preference.SelectionChanged += (_, _) => Persist();
+
+        var checkBtn = new Button { Content = "Check for updates now", Margin = new Thickness(0, 12, 0, 0) };
+        checkBtn.Click += async (_, _) => await RunCheckAsync();
+
+        var panel = new StackPanel { Spacing = 8 };
+        panel.Children.Add(new TextBlock
+        {
+            Text = "Updates (opt-in)",
+            Style = Application.Current.Resources["SubtitleTextBlockStyle"] as Style,
+        });
+        panel.Children.Add(new TextBlock
+        {
+            Text =
+                "Off by default. When enabled, Windows Box may contact GitHub Releases only. " +
+                "Nothing is downloaded or installed without your action. " +
+                "Signed offline builds work with all network features off — see docs/network-safeguards.md.",
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.85,
+        });
+        panel.Children.Add(Labeled("Check for updates", _checkUpdates));
+        panel.Children.Add(Labeled("When to check", _preference));
+        panel.Children.Add(checkBtn);
+        panel.Children.Add(_status);
+
+        if (settings.LastUpdateCheckUtc is { } last)
+        {
+            _status.Text = $"Last check: {last:u}. Last seen tag: {settings.LastSeenReleaseTag ?? "(none)"}.";
+        }
+        else
+        {
+            _status.Text = "No update check has run yet (network idle).";
+        }
+
+        Content = CreateRoot("Settings", "Privacy-first preferences. Network features stay off until you opt in.", panel);
+    }
+
+    private void Persist()
+    {
+        var settings = _store.Load();
+        settings.CheckForUpdatesEnabled = _checkUpdates.IsOn;
+        settings.UpdatePreference = _preference.SelectedIndex == 1
+            ? UpdatePreference.Automatic
+            : UpdatePreference.Manual;
+        _store.Save(settings);
+        _status.Text = "Saved. " + (settings.CheckForUpdatesEnabled
+            ? "Update checks opted in (" + settings.UpdatePreference + ")."
+            : "Update checks remain off — no network calls.");
+    }
+
+    private async Task RunCheckAsync()
+    {
+        Persist();
+        var settings = _store.Load();
+        var checker = new UpdateChecker(
+            _store,
+            currentVersion: "0.1.0-m1",
+            httpClientFactory: settings.CheckForUpdatesEnabled ? () => new HttpClient() : null);
+        var result = await checker.CheckAsync(userInitiated: true);
+        _status.Text = result.Message;
+    }
+
+    private static StackPanel Labeled(string label, UIElement control)
+    {
+        var row = new StackPanel { Spacing = 4, Margin = new Thickness(0, 8, 0, 0) };
+        row.Children.Add(new TextBlock { Text = label, Opacity = 0.9 });
+        row.Children.Add(control);
+        return row;
     }
 }

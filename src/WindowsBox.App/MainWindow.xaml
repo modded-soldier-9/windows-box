@@ -10,7 +10,7 @@
         <NavigationView
             x:Name="RootNav"
             PaneDisplayMode="Left"
-            IsSettingsVisible="False"
+            IsSettingsVisible="True"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleButtonVisible="True"
             OpenPaneLength="240"
