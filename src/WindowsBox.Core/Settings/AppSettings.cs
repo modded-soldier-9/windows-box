@@ -1,3 +1,5 @@
+using WindowsBox.Core.Logging;
+
 namespace WindowsBox.Core.Settings;
 
 /// <summary>
@@ -37,6 +39,9 @@ public sealed class AppSettings
     /// When false, TelemetryClient performs zero network I/O.
     /// </summary>
     public bool TelemetryEnabled { get; set; }
+
+    /// <summary>Minimum log level written to the local log file. Default Info.</summary>
+    public LogLevel LogLevel { get; set; } = LogLevel.Info;
 }
 
 public enum UpdatePreference

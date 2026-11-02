@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using WindowsBox.Core.Logging;
 
 namespace WindowsBox.Core.Settings;
 
@@ -77,4 +78,5 @@ public sealed class FileAppSettingsStore : IAppSettingsStore
     UseStringEnumConverter = true)]
 [JsonSerializable(typeof(AppSettings))]
 [JsonSerializable(typeof(UpdatePreference))]
+[JsonSerializable(typeof(LogLevel))]
 internal partial class SettingsJsonContext : JsonSerializerContext;
