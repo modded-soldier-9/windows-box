@@ -349,7 +349,7 @@ public class ApplyPipelineTests
     }
 
     [Fact]
-    public void Skips_per_user_templates_with_explicit_reason()
+    public void Per_user_templates_require_confirm_and_warn()
     {
         var services = new FakeServiceController();
         services.Seed("OneSyncSvc", ServiceStartType.AutomaticDelayed, delayed: true);
@@ -386,7 +386,8 @@ public class ApplyPipelineTests
             new FileJournalStore(Path.Combine(Path.GetTempPath(), "wbox-pu-" + Guid.NewGuid().ToString("N"))));
 
         var plan = pipeline.DetectAndPreview(catalog, OptimizationProfile.Privacy);
-        Assert.Empty(plan.Changes);
-        Assert.Contains(plan.Skipped, s => s.Reason.Contains("Per-user template", StringComparison.Ordinal));
+        var change = Assert.Single(plan.Changes);
+        Assert.True(change.RequiresConfirm);
+        Assert.Contains(change.Breaks, b => b.Contains("Per-user template", StringComparison.Ordinal));
     }
 }

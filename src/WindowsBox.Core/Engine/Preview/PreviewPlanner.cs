@@ -67,17 +67,6 @@ public sealed class PreviewPlanner
                 continue;
             }
 
-            if (entry.PerUser)
-            {
-                skipped.Add(new PreviewSkip
-                {
-                    ItemId = entry.Id,
-                    ServiceName = entry.Name,
-                    Reason = "Per-user template (instance resolution lands in M1).",
-                });
-                continue;
-            }
-
             if (!entry.Recommend.TryGetValue(profile, out var target))
             {
                 skipped.Add(new PreviewSkip
@@ -130,6 +119,12 @@ public sealed class PreviewPlanner
                 continue;
             }
 
+            var breaks = entry.Breaks.ToList();
+            if (entry.PerUser)
+            {
+                breaks.Add("Per-user template: only the template is changed; existing user instances keep prior config until recreated.");
+            }
+
             var gain = EstimateGainMb(current, target);
             changes.Add(new PreviewChange
             {
@@ -140,8 +135,8 @@ public sealed class PreviewPlanner
                 Target = target,
                 Risk = entry.Risk,
                 ExpectedGainMb = gain,
-                Breaks = entry.Breaks,
-                RequiresConfirm = entry.Risk >= 3 || target == ServiceStartType.Disabled,
+                Breaks = breaks,
+                RequiresConfirm = entry.Risk >= 3 || target == ServiceStartType.Disabled || entry.PerUser,
                 HonestyLabel = entry.HonestyLabel,
             });
         }
