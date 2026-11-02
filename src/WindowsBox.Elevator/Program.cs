@@ -1,9 +1,14 @@
+using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using WindowsBox.Core.Catalog.Models;
+using WindowsBox.Core.Engine.Journal;
+using WindowsBox.Core.Platform;
 
 /// <summary>
-/// Short-lived elevated helper. Launched per apply batch via UAC, exits after work.
-/// M0: protocol + dry validation only; real SCM calls land behind Windows-only adapters in M1.
+/// Short-lived elevated helper. Launched per apply/rollback batch via UAC, exits when done.
+/// Never phones home. Never stays resident.
 /// </summary>
 return ElevatorHost.Run(args);
 
@@ -76,16 +81,69 @@ internal static class ElevatorHost
         var plan = JsonSerializer.Deserialize(stream, ElevatorJsonContext.Default.ElevatorPlan)
                    ?? throw new InvalidOperationException("Invalid plan JSON.");
 
-        // M0 stub: acknowledge without mutating the host.
+        if (!OperatingSystem.IsWindows())
+        {
+            Write(new ElevatorResponse
+            {
+                Ok = true,
+                Message = $"Non-Windows host: acknowledged plan '{plan.Id}' with {plan.Changes.Count} change(s); no SCM mutations.",
+                Elevated = IsElevated(),
+                Applied = 0,
+                Skipped = plan.Changes.Count,
+            });
+            return 0;
+        }
+
+        return ApplyPlanWindows(plan);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static int ApplyPlanWindows(ElevatorPlan plan)
+    {
+        var services = PlatformAdapters.CreateServiceController();
+        var applied = 0;
+        var skipped = 0;
+        var errors = new List<string>();
+
+        foreach (var change in plan.Changes)
+        {
+            if (!Enum.TryParse<ServiceStartType>(change.TargetStartType, ignoreCase: true, out var startType))
+            {
+                skipped++;
+                errors.Add($"{change.ServiceName}: bad start type '{change.TargetStartType}'");
+                continue;
+            }
+
+            try
+            {
+                if (!services.Exists(change.ServiceName))
+                {
+                    skipped++;
+                    errors.Add($"{change.ServiceName}: not found");
+                    continue;
+                }
+
+                services.SetStartType(change.ServiceName, startType, change.DelayedAutostart);
+                applied++;
+            }
+            catch (Exception ex)
+            {
+                skipped++;
+                errors.Add($"{change.ServiceName}: {ex.Message}");
+            }
+        }
+
         Write(new ElevatorResponse
         {
-            Ok = true,
-            Message = $"Accepted plan '{plan.Id}' with {plan.Changes.Count} change(s); SCM apply stubbed until M1 Windows adapter.",
+            Ok = errors.Count == 0,
+            Message = errors.Count == 0
+                ? $"Applied {applied} change(s) for plan '{plan.Id}'."
+                : $"Applied {applied}, skipped {skipped}. " + string.Join("; ", errors),
             Elevated = IsElevated(),
-            Applied = 0,
-            Skipped = plan.Changes.Count,
+            Applied = applied,
+            Skipped = skipped,
         });
-        return 0;
+        return errors.Count == 0 ? 0 : 1;
     }
 
     private static int Rollback(string path)
@@ -95,20 +153,76 @@ internal static class ElevatorHost
             return Fail($"Journal not found: {path}");
         }
 
+        using var stream = File.OpenRead(path);
+        var journal = JsonSerializer.Deserialize<ApplyJournal>(stream, JsonOptions)
+                      ?? throw new InvalidOperationException("Invalid journal JSON.");
+
+        if (!OperatingSystem.IsWindows())
+        {
+            Write(new ElevatorResponse
+            {
+                Ok = true,
+                Message = $"Non-Windows host: rollback of '{journal.Id}' acknowledged; no SCM mutations.",
+                Elevated = IsElevated(),
+                Skipped = journal.Entries.Count,
+            });
+            return 0;
+        }
+
+        return RollbackWindows(journal);
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static int RollbackWindows(ApplyJournal journal)
+    {
+        var services = PlatformAdapters.CreateServiceController();
+        var applied = 0;
+        var skipped = 0;
+        var errors = new List<string>();
+
+        foreach (var entry in journal.Entries)
+        {
+            try
+            {
+                services.SetStartType(entry.ServiceName, entry.PriorStartType, entry.PriorDelayedAutostart);
+                applied++;
+            }
+            catch (Exception ex)
+            {
+                skipped++;
+                errors.Add($"{entry.ServiceName}: {ex.Message}");
+            }
+        }
+
         Write(new ElevatorResponse
         {
-            Ok = true,
-            Message = "Rollback acknowledged (SCM restore stubbed until M1).",
+            Ok = errors.Count == 0,
+            Message = errors.Count == 0
+                ? $"Rolled back {applied} service(s) from journal '{journal.Id}'."
+                : $"Rollback partial: {applied} ok, {skipped} failed. " + string.Join("; ", errors),
             Elevated = IsElevated(),
+            Applied = applied,
+            Skipped = skipped,
         });
-        return 0;
+        return errors.Count == 0 ? 0 : 1;
     }
 
     private static bool IsElevated()
     {
+<<<<<<< HEAD
         // Real WindowsIdentity check arrives with the Windows SCM adapter (M1).
         // Keeping this TFM portable so Linux CI can compile/publish the helper host.
         return false;
+=======
+        if (!OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        using var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+        return principal.IsInRole(WindowsBuiltInRole.Administrator);
+>>>>>>> 374c93b (feat(elevator): elevate only for a batch, then exit)
     }
 
     private static int Fail(string message)
@@ -135,6 +249,8 @@ internal sealed class ElevatorChange
     public string ServiceName { get; set; } = "";
 
     public string TargetStartType { get; set; } = "";
+
+    public bool DelayedAutostart { get; set; }
 }
 
 internal sealed class ElevatorResponse
