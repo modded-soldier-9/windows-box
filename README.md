@@ -16,8 +16,9 @@ Inspired by (not copied from) Chris Titus Tech’s WinUtil (MIT) and the wider o
 
 ## Stack
 
-- C# / .NET 9
-- WinUI 3 (Windows App SDK), Windows 11 only
+- C# / .NET 10 LTS
+- WinUI 3 (Windows App SDK 1.8), Windows 11 only
+- Native AOT for `wbox` CLI and Elevator
 - Licence: MIT
 
 ## Quick start

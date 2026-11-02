@@ -4,7 +4,7 @@ Goals: native Windows 11 look (Mica, Fluent, snap layouts, accessibility), tiny 
 
 | Option | UX fidelity on Win11 | Resources | System access | Dev velocity | Verdict |
 |-|-|-|-|-|-|
-| **WinUI 3 / Windows App SDK + .NET 8/9 (C#)** | Best: native Fluent controls, Mica, NavigationView, accessibility & high-contrast for free | ~60–120 MB RAM while open, 0 when closed; NativeAOT/trim cuts startup | Full: P/Invoke/CsWin32, ServiceController, Microsoft.Win32.Registry, TaskScheduler, Microsoft.Management.Deployment (winget COM) | Good; XAML tooling improving; unpackaged/self-contained supported | **Recommended** |
+| **WinUI 3 / Windows App SDK + .NET 10 LTS (C#)** | Best: native Fluent controls, Mica, NavigationView, accessibility & high-contrast for free | ~60–120 MB RAM while open, 0 when closed; NativeAOT/trim cuts startup | Full: P/Invoke/CsWin32, ServiceController, Microsoft.Win32.Registry, TaskScheduler, Microsoft.Management.Deployment (winget COM) | Good; XAML tooling improving; unpackaged/self-contained supported | **Recommended** |
 | WPF + WPF-UI (lepoco) | Very good Fluent imitation, mature | Similar | Full | Highest maturity, huge ecosystem | Strong fallback if WinUI 3 pain bites |
 | Avalonia 11 | Good, Fluent theme but not native Mica/feel | Similar | Full via .NET | Cross-platform (irrelevant here) | Not needed — Windows-only product |
 | Tauri 2 (Rust + WebView2) | Web-styled; Fluent via CSS, never quite native | WebView2 ~100–200 MB while open | Rust windows-rs is excellent | Fast UI iteration | Good alt if team is web-first |
@@ -12,8 +12,8 @@ Goals: native Windows 11 look (Mica, Fluent, snap layouts, accessibility), tiny 
 | PowerShell + WPF (WinUtil model) | Dated | Low | Full but slow, AV-flagged `irm|iex` | Easy community PRs | Rejected for core; keep PS export for scripts |
 
 ## Recommendation
-**C# / .NET 9 + WinUI 3 (Windows App SDK 1.6+), unpackaged self-contained, trimmed**, with:
-- **Core engine as a separate .NET class library + CLI (`wbox.exe`)** — UI is a thin shell; CLI enables scripting, CI tests, and headless profile apply.
+**C# / .NET 10 LTS + WinUI 3 (Windows App SDK 1.8), unpackaged self-contained, trimmed**, with:
+- **Core engine as a separate .NET class library + Native AOT CLI (`wbox.exe`) and Elevator** — UI is a thin shell; CLI enables scripting, CI tests, and headless profile apply.
 - **Elevation model:** UI runs as user; a short-lived elevated helper process (launched per apply batch via UAC, exits after) — no resident service.
 - **Data:** declarative YAML/JSON catalogs (tweaks, services, apps) in repo, schema-validated, community-PR friendly; JSONL journal for undo under `%ProgramData%\WindowsBox`.
 - **Packaging:** signed MSIX + portable ZIP + winget manifest; Azure Trusted Signing / SignPath (free for OSS) to avoid SmartScreen/AV hits.

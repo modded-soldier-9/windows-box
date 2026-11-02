@@ -17,8 +17,9 @@ MIT. Reuse only MIT/Apache (or similarly permissive) data with notices. GPL (Opt
 
 ## Stack
 
-- C# / .NET 9
-- WinUI 3 (Windows App SDK), Windows 11 only (`10.0.22621+`)
+- C# / .NET 10 LTS
+- WinUI 3 (Windows App SDK 1.8), Windows 11 only (`10.0.22621+`)
+- Native AOT for `wbox` CLI and Elevator
 - Catalogs: schema-validated YAML under `catalog/`
 
 ## Getting started

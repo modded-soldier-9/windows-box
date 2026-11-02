@@ -29,3 +29,4 @@ Thumbs.db
 ## Windows Box local
 **/WindowsBox/journals/
 *.journal.json
+artifacts/
