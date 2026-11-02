@@ -9,7 +9,7 @@ using WindowsBox.Core.Update;
 
 namespace WindowsBox.App.Pages;
 
-internal abstract class ShellPage : Page
+public abstract class ShellPage : Page
 {
     protected static Grid CreateRoot(string title, string blurb, UIElement? body = null)
     {

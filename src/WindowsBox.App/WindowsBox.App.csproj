@@ -19,7 +19,8 @@
     <EnableMsixTooling>false</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <DefineConstants>$(DefineConstants);WINDOWS</DefineConstants>
+    <!-- DISABLE_XAML_GENERATED_MAIN: keep Program.cs as the unpackaged entrypoint. -->
+    <DefineConstants>$(DefineConstants);WINDOWS;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
 
   <!-- Non-Windows: stub library so `dotnet build WindowsBox.sln` succeeds on Linux CI. -->

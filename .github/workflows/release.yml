@@ -30,10 +30,25 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Publish WinUI App + AOT CLI + Elevator
+        shell: pwsh
         run: |
-          dotnet publish src/WindowsBox.App/WindowsBox.App.csproj -c Release -r win-x64 --self-contained true -o artifacts/app
-          dotnet publish src/WindowsBox.Cli/WindowsBox.Cli.csproj -c Release -r win-x64 -o artifacts/wbox
-          dotnet publish src/WindowsBox.Elevator/WindowsBox.Elevator.csproj -c Release -r win-x64 -o artifacts/elevator
+          $ErrorActionPreference = 'Stop'
+          function Invoke-Publish([string]$Project, [string[]]$ExtraArgs) {
+            & dotnet publish $Project @ExtraArgs
+            if ($LASTEXITCODE -ne 0) {
+              throw "dotnet publish failed for $Project (exit $LASTEXITCODE)"
+            }
+          }
+          Invoke-Publish 'src/WindowsBox.App/WindowsBox.App.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true',
+            '-p:Platform=x64', '-o', 'artifacts/app'
+          )
+          Invoke-Publish 'src/WindowsBox.Cli/WindowsBox.Cli.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '-o', 'artifacts/wbox'
+          )
+          Invoke-Publish 'src/WindowsBox.Elevator/WindowsBox.Elevator.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '-o', 'artifacts/elevator'
+          )
 
       - name: Offline sign (placeholder secrets)
         shell: pwsh
