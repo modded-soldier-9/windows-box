@@ -30,7 +30,25 @@ wbox journals
 wbox rollback <journal-id>
 ```
 
+## Local preview on Windows (before any GitHub release)
+
+Publish App + CLI + Elevator, optional-sign, and pack a portable ZIP:
+
+```powershell
+./build/local-preview.ps1
+# or launch the staged shell after pack:
+./build/local-preview.ps1 -Launch
+```
+
+Outputs: `artifacts/dist/WindowsBox-local-preview-win-x64.zip` and staged
+`artifacts/portable/WindowsBox.App.exe`. Test that ZIP on your machine first;
+only then cut a GitHub preview release.
+
 ## App (WinUI)
+
+From a local-preview ZIP, a GitHub Release ZIP, or after `install.ps1`, launch
+**`WindowsBox.App.exe`**. The portable archive also includes `wbox.exe`,
+`WindowsBox.Elevator.exe`, and `catalog/`.
 
 1. Open Windows Box.
 2. Use **Services** → Preview diff before applying.

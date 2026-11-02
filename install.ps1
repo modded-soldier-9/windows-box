@@ -11,8 +11,8 @@
   5. Does NOT download or invoke any other remote scripts.
 
   This script itself performs the download + verify + expand. After verification
-  it expands the ZIP to the install directory. It never runs remote PowerShell
-  beyond this file.
+  it expands the ZIP to the install directory and launches WindowsBox.App.exe
+  once (unless -NoLaunch). It never runs remote PowerShell beyond this file.
 
 .PARAMETER Version
   Release tag (default: latest stable non-prerelease).
@@ -28,6 +28,9 @@
 
 .PARAMETER DryRun
   Resolve URLs and print plan without downloading.
+
+.PARAMETER NoLaunch
+  Skip starting WindowsBox.App.exe after a successful install.
 #>
 [CmdletBinding()]
 param(
@@ -36,7 +39,8 @@ param(
     [string]$Channel = 'stable',
     [string]$InstallDir = (Join-Path $env:LOCALAPPDATA 'WindowsBox'),
     [string]$Repo = 'modded-soldier-9/windows-box',
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$NoLaunch
 )
 
 Set-StrictMode -Version Latest
@@ -139,13 +143,21 @@ try {
     Write-Step "Expanding verified ZIP to $InstallDir…"
     Expand-Archive -LiteralPath $zipPath -DestinationPath $InstallDir -Force
 
-    $candidates = @(
-        Join-Path $InstallDir 'wbox.exe'
-        Join-Path $InstallDir 'WindowsBox.App.exe'
-        Join-Path $InstallDir 'WindowsBox.Elevator.exe'
-    ) | Where-Object { Test-Path -LiteralPath $_ }
+    $appExe = Join-Path $InstallDir 'WindowsBox.App.exe'
+    $wboxExe = Join-Path $InstallDir 'wbox.exe'
+    $elevatorExe = Join-Path $InstallDir 'WindowsBox.Elevator.exe'
+    $required = @($appExe, $wboxExe, $elevatorExe)
+    $missing = @($required | Where-Object { -not (Test-Path -LiteralPath $_) })
+    if ($missing.Count -gt 0) {
+        throw "Release ZIP is missing required binaries: $($missing -join ', '). This is a packaging bug — the GUI shell must ship in the portable release."
+    }
 
-    foreach ($exe in $candidates) {
+    $catalogServices = Join-Path (Join-Path $InstallDir 'catalog') 'services'
+    if (-not (Test-Path -LiteralPath $catalogServices)) {
+        throw "Release ZIP is missing catalog/services. Aborting — CLI/App cannot run without the catalog."
+    }
+
+    foreach ($exe in $required) {
         $sig = Get-AuthenticodeSignature -FilePath $exe
         if ($sig.Status -eq 'NotSigned') {
             Write-Step "WARNING: $exe is not Authenticode-signed (status=$($sig.Status)). Continuing because SHA256 matched the published checksum; prefer signed releases."
@@ -159,6 +171,13 @@ try {
 
     Write-Step "Install complete. Network features remain OFF by default — see Settings."
     Write-Step "No other remote code was executed by this installer."
+
+    if ($NoLaunch) {
+        Write-Step "Skipping launch (-NoLaunch). Start manually: $appExe"
+    } else {
+        Write-Step "Launching WindowsBox.App…"
+        Start-Process -FilePath $appExe
+    }
 }
 finally {
     if (Test-Path -LiteralPath $temp) {

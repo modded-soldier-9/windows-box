@@ -26,18 +26,24 @@ Until then, the placeholder pipeline signs with `signtool` when secrets exist an
 
 ```bash
 # Produce artifacts (no network required after restore)
+dotnet publish src/WindowsBox.App/WindowsBox.App.csproj -c Release -r win-x64 --self-contained true -o artifacts/app
 dotnet publish src/WindowsBox.Cli/WindowsBox.Cli.csproj -c Release -r win-x64 -o artifacts/wbox
 dotnet publish src/WindowsBox.Elevator/WindowsBox.Elevator.csproj -c Release -r win-x64 -o artifacts/elevator
 
 # Sign when Ron’s PFX is present (example)
 pwsh ./build/sign.ps1 -CertPath $env:WINDOWSBOX_CERT_PFX_PATH -CertPassword $env:WINDOWSBOX_CERT_PASSWORD
+
+# Stage portable ZIP (requires WindowsBox.App.exe — the launchable shell)
+pwsh ./build/pack-portable.ps1 -Tag portable
 ```
 
 `build/sign.ps1` refuses to upload anywhere; it only invokes `signtool` locally.
+`build/pack-portable.ps1` fails if the WinUI shell is missing so release ZIPs always include a launchable app.
 
 ## Verification
 
 ```bash
+signtool verify /pa artifacts/app/WindowsBox.App.exe
 signtool verify /pa artifacts/wbox/wbox.exe
 ```
 

@@ -16,6 +16,11 @@ public class InstallScriptTests
         Assert.Contains("Invoke-WebRequest", text, StringComparison.Ordinal);
         Assert.DoesNotContain("iex (", text, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("Invoke-Expression", text, StringComparison.OrdinalIgnoreCase);
+        // After a verified expand, the installer must be able to launch the WinUI shell.
+        Assert.Contains("WindowsBox.App.exe", text, StringComparison.Ordinal);
+        Assert.Contains("Start-Process", text, StringComparison.Ordinal);
+        Assert.Contains("NoLaunch", text, StringComparison.Ordinal);
+        Assert.Contains("packaging bug", text, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

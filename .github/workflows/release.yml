@@ -29,10 +29,26 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Publish AOT CLI + Elevator
+      - name: Publish WinUI App + AOT CLI + Elevator
+        shell: pwsh
         run: |
-          dotnet publish src/WindowsBox.Cli/WindowsBox.Cli.csproj -c Release -r win-x64 -o artifacts/wbox
-          dotnet publish src/WindowsBox.Elevator/WindowsBox.Elevator.csproj -c Release -r win-x64 -o artifacts/elevator
+          $ErrorActionPreference = 'Stop'
+          function Invoke-Publish([string]$Project, [string[]]$ExtraArgs) {
+            & dotnet publish $Project @ExtraArgs
+            if ($LASTEXITCODE -ne 0) {
+              throw "dotnet publish failed for $Project (exit $LASTEXITCODE)"
+            }
+          }
+          Invoke-Publish 'src/WindowsBox.App/WindowsBox.App.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '--self-contained', 'true',
+            '-p:Platform=x64', '-o', 'artifacts/app'
+          )
+          Invoke-Publish 'src/WindowsBox.Cli/WindowsBox.Cli.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '-o', 'artifacts/wbox'
+          )
+          Invoke-Publish 'src/WindowsBox.Elevator/WindowsBox.Elevator.csproj' @(
+            '-c', 'Release', '-r', 'win-x64', '-o', 'artifacts/elevator'
+          )
 
       - name: Offline sign (placeholder secrets)
         shell: pwsh
@@ -45,15 +61,9 @@ jobs:
       - name: Pack portable ZIP + SHA256 (+ install.ps1)
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force artifacts/dist | Out-Null
           $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { 'portable' }
-          $zipName = "WindowsBox-$tag-win-x64.zip"
-          $zipPath = "artifacts/dist/$zipName"
-          Compress-Archive -Path artifacts/wbox/*,artifacts/elevator/* -DestinationPath $zipPath -Force
-          $hash = (Get-FileHash -Algorithm SHA256 -Path $zipPath).Hash.ToLowerInvariant()
-          Set-Content -Path "$zipPath.sha256" -Value "$hash  $zipName" -NoNewline
+          ./build/pack-portable.ps1 -Tag $tag
           Copy-Item install.ps1 artifacts/dist/install.ps1 -Force
-          Write-Host "Packed $zipName sha256=$hash"
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
@@ -67,4 +77,8 @@ jobs:
         with:
           files: artifacts/dist/*
           generate_release_notes: true
-          draft: true
+          # Preview / pre-1.0 tags publish as prereleases so they are downloadable
+          # (draft:false). Stable 1.0+ tags can flip prerelease later.
+          name: ${{ github.ref_name }} preview
+          draft: false
+          prerelease: true
