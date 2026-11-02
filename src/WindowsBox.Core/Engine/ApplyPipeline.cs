@@ -5,6 +5,7 @@ using WindowsBox.Core.Engine.Health;
 using WindowsBox.Core.Engine.Journal;
 using WindowsBox.Core.Engine.Preview;
 using WindowsBox.Core.Engine.Restore;
+using WindowsBox.Core.Engine.Undo;
 using WindowsBox.Core.Engine.Verify;
 
 namespace WindowsBox.Core.Engine;
@@ -20,6 +21,7 @@ public sealed class ApplyPipeline
     private readonly ApplyVerifier _verifier;
     private readonly DriftDetector _drift;
     private readonly OfflineRestoreKit? _restoreKit;
+    private readonly IUndoLayer? _undo;
 
     public ApplyPipeline(
         IServiceController services,
@@ -27,7 +29,8 @@ public sealed class ApplyPipeline
         ISystemProbe probe,
         IJournalStore journals,
         IHealthChecker? health = null,
-        OfflineRestoreKit? restoreKit = null)
+        OfflineRestoreKit? restoreKit = null,
+        IUndoLayer? undo = null)
     {
         _services = services;
         _registry = registry;
@@ -38,6 +41,7 @@ public sealed class ApplyPipeline
         _verifier = new ApplyVerifier(services);
         _drift = new DriftDetector(services);
         _restoreKit = restoreKit;
+        _undo = undo;
     }
 
     public PreviewPlan DetectAndPreview(CatalogDocument catalog, OptimizationProfile profile) =>
@@ -167,6 +171,13 @@ public sealed class ApplyPipeline
         var health = _health.Run();
         var verify = _verifier.Verify(journal);
 
+        UndoBatch? undoBatch = null;
+        if (_undo is not null)
+        {
+            undoBatch = _undo.FromJournal(journal);
+            await _undo.SaveAsync(undoBatch, cancellationToken);
+        }
+
         return new ApplyResult
         {
             Journal = journal,
@@ -175,6 +186,7 @@ public sealed class ApplyPipeline
             Verify = verify,
             Restore = restore,
             Plan = plan,
+            UndoBatch = undoBatch,
         };
     }
 
@@ -260,4 +272,6 @@ public sealed class ApplyResult
     public OfflineRestoreArtifacts? Restore { get; init; }
 
     public PreviewPlan? Plan { get; init; }
+
+    public UndoBatch? UndoBatch { get; init; }
 }

@@ -3,6 +3,8 @@ using WindowsBox.Core.Catalog.Models;
 using WindowsBox.Core.Engine;
 using WindowsBox.Core.Engine.Journal;
 using WindowsBox.Core.Engine.Restore;
+using WindowsBox.Core.Engine.Undo;
+using WindowsBox.Core.Engine.Verify;
 using WindowsBox.Core.Platform;
 
 return await WboxApp.RunAsync(args);
@@ -203,12 +205,13 @@ internal static class WboxApp
     {
         var quiet = HasFlag(args, "--quiet");
         var journalDir = GetOption(args, "--journal-dir") ?? DefaultJournalDir();
-        var pipeline = CreatePipeline(journalDir);
         var store = new FileJournalStore(journalDir);
+        var services = PlatformAdapters.CreateServiceController();
 
         var id = args.FirstOrDefault(a => !a.StartsWith('-') && a != "--quiet");
         if (id is not null)
         {
+            var pipeline = CreatePipeline(journalDir);
             var journal = await store.LoadAsync(id)
                           ?? throw new InvalidOperationException($"Journal not found: {id}");
             var verify = pipeline.VerifyJournal(journal);
@@ -224,22 +227,23 @@ internal static class WboxApp
             return verify.Passed ? 0 : 5;
         }
 
-        var drift = await pipeline.DetectDriftAsync();
+        // App-open path: one-shot stuck + drift check. Notify only on drift when --quiet.
+        var report = await StartupVerifier.Create(store, services).RunAsync(quiet);
         if (!quiet)
         {
-            Console.WriteLine(
-                $"Drift check: {drift.Drifted.Count} drifted, {drift.Missing.Count} missing, {drift.Matched.Count} matched");
-            foreach (var item in drift.Drifted.Concat(drift.Missing))
+            Console.WriteLine(report.Summary);
+            foreach (var item in report.Drift.Drifted.Concat(report.Drift.Missing))
             {
-                Console.WriteLine($"  {item.ServiceName}: expected {item.Expected}, actual {item.Actual?.ToString() ?? "missing"} — {item.Reason}");
+                Console.WriteLine(
+                    $"  {item.ServiceName}: expected {item.Expected}, actual {item.Actual?.ToString() ?? "missing"} — {item.Reason}");
             }
         }
-        else if (drift.HasDrift)
+        else if (!report.Passed)
         {
-            Console.WriteLine($"drift:{drift.Drifted.Count + drift.Missing.Count}");
+            Console.WriteLine($"drift:{report.Drift.Drifted.Count + report.Drift.Missing.Count + report.StuckFailures}");
         }
 
-        return drift.HasDrift ? 5 : 0;
+        return report.Passed ? 0 : 5;
     }
 
     private static async Task<int> RunDriftAsync(string[] args) =>
@@ -259,13 +263,18 @@ internal static class WboxApp
 
     private static ApplyPipeline CreatePipeline(string journalDir)
     {
-        var backupDir = Path.Combine(Path.GetDirectoryName(journalDir.TrimEnd(Path.DirectorySeparatorChar)) ?? journalDir, "backups");
+        var parent = Path.GetDirectoryName(journalDir.TrimEnd(Path.DirectorySeparatorChar)) ?? journalDir;
+        var backupDir = Path.Combine(parent, "backups");
+        var undoDir = Path.Combine(parent, "undo");
+        var services = PlatformAdapters.CreateServiceController();
+        var registry = PlatformAdapters.CreateRegistry();
         return new ApplyPipeline(
-            PlatformAdapters.CreateServiceController(),
-            PlatformAdapters.CreateRegistry(),
+            services,
+            registry,
             PlatformAdapters.CreateSystemProbe(),
             new FileJournalStore(journalDir),
-            restoreKit: new OfflineRestoreKit(backupDir));
+            restoreKit: new OfflineRestoreKit(backupDir),
+            undo: new FileUndoLayer(undoDir, services, registry));
     }
 
     private static OptimizationProfile ParseProfile(string name)
