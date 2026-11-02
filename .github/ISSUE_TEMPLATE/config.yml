@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/modded-soldier-9/windows-box/security/advisories/new
+    about: Private report only — do not file a public issue.
+  - name: Catalog contribution tips
+    url: https://github.com/modded-soldier-9/windows-box/blob/main/CONTRIBUTING.md
+    about: How to add or fix service YAML safely.
