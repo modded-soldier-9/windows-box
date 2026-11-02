@@ -13,7 +13,7 @@ every network feature turned off. Anything that contacts the network is **opt-in
 | Update channel | **Stable** | Settings → Updates | Beta reads GitHub prereleases; still requires check opt-in |
 | Crash report upload | **Off** | Settings → Privacy | Local dumps under `%ProgramData%\WindowsBox\crashes`; upload only if opted in |
 | Optional telemetry | **Off** | Settings → Privacy | Nothing until enabled; switchable any time |
-| Plugin marketplace fetch | **Off** / in-repo only (when present) | Settings → Plugins | Only allow-listed plugins merged into this repo |
+| Plugin marketplace | **In-repo only** | Settings / Plugins page | Only allow-listed plugins under `plugins/`; deny-list kill switch; catalog refresh tied to update opt-in |
 
 ## Offline contract
 

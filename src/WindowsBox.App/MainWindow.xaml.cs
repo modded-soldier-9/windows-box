@@ -36,6 +36,7 @@ public sealed partial class MainWindow : Window
             "startup" => typeof(StartupPage),
             "tweaks" => typeof(TweaksPage),
             "history" => typeof(HistoryPage),
+            "plugins" => typeof(PluginsPage),
             "settings" => typeof(SettingsPage),
             _ => typeof(HomePage),
         };

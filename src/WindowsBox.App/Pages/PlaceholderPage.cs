@@ -1,6 +1,8 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using WindowsBox.Core.Plugins;
+using WindowsBox.Core.Plugins.Builtin;
 using WindowsBox.Core.Presentation;
 using WindowsBox.Core.Settings;
 using WindowsBox.Core.Update;
@@ -228,6 +230,65 @@ public sealed class HistoryPage : ShellPage
             "History",
             "Timeline of apply batches with one-click rollback from measured journal priors.",
             list);
+    }
+}
+
+/// <summary>
+/// In-repo plugin marketplace. No sandbox — only allow-listed merged plugins.
+/// </summary>
+public sealed class PluginsPage : ShellPage
+{
+    public PluginsPage()
+    {
+        var panel = new StackPanel { Spacing = 8 };
+        panel.Children.Add(new TextBlock
+        {
+            Text =
+                "Plugins ship via PRs into the repo plugins/ folder. Ratings use GitHub issue labels " +
+                "(plugin-rating:1–5, plugin-review, plugin-report). Deny-list: plugins/deny-list.txt. " +
+                "Auto-update is tied to Settings → Check for updates.",
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.85,
+        });
+
+        var installBtn = new Button { Content = "Install protected-service-drift (one-click)" };
+        var status = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 8, 0, 0) };
+        installBtn.Click += (_, _) =>
+        {
+            try
+            {
+                var root = FindPluginsRoot();
+                var store = new FileAppSettingsStore(FileAppSettingsStore.DefaultDirectory());
+                var market = new PluginMarketplace(root, store);
+                var result = market.Install(ProtectedServiceDriftPlugin.PluginId);
+                status.Text = result.Message;
+            }
+            catch (Exception ex)
+            {
+                status.Text = ex.Message;
+            }
+        };
+
+        panel.Children.Add(installBtn);
+        panel.Children.Add(status);
+        Content = CreateRoot("Plugins", "Reviewed in-repo extensions only. Nothing downloads arbitrary code.", panel);
+    }
+
+    private static string FindPluginsRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null)
+        {
+            var candidate = Path.Combine(dir.FullName, "plugins");
+            if (Directory.Exists(candidate))
+            {
+                return candidate;
+            }
+
+            dir = dir.Parent;
+        }
+
+        return Path.GetFullPath("plugins");
     }
 }
 

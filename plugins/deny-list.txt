@@ -1,0 +1,3 @@
+# Windows Box plugin deny-list (kill switch)
+# One plugin id per line. Lines starting with # are comments.
+# Denied plugins cannot be registered even if present under plugins/.
