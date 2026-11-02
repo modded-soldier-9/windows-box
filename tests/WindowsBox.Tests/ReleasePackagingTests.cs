@@ -40,6 +40,23 @@ public class ReleasePackagingTests
     }
 
     [Fact]
+    public void Local_preview_script_publishes_signs_packs_and_requires_app()
+    {
+        var path = FindRepoFile(Path.Combine("build", "local-preview.ps1"));
+        var text = File.ReadAllText(path);
+
+        Assert.Contains("WindowsBox.App.csproj", text, StringComparison.Ordinal);
+        Assert.Contains("WindowsBox.Cli.csproj", text, StringComparison.Ordinal);
+        Assert.Contains("WindowsBox.Elevator.csproj", text, StringComparison.Ordinal);
+        Assert.Contains("Platform=", text, StringComparison.Ordinal);
+        Assert.Contains("sign.ps1", text, StringComparison.Ordinal);
+        Assert.Contains("pack-portable.ps1", text, StringComparison.Ordinal);
+        Assert.Contains("WindowsBox.App.exe", text, StringComparison.Ordinal);
+        Assert.Contains("-Launch", text, StringComparison.Ordinal);
+        Assert.Contains("artifacts/dist", text, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Pack_portable_fails_when_app_publish_output_missing()
     {
         var script = FindRepoFile(Path.Combine("build", "pack-portable.ps1"));
