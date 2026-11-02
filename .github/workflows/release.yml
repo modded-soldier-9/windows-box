@@ -62,4 +62,8 @@ jobs:
         with:
           files: artifacts/dist/*
           generate_release_notes: true
-          draft: true
+          # Preview / pre-1.0 tags publish as prereleases so they are downloadable
+          # (draft:false). Stable 1.0+ tags can flip prerelease later.
+          name: ${{ github.ref_name }} preview
+          draft: false
+          prerelease: true
