@@ -225,6 +225,7 @@ public sealed class SettingsPage : ShellPage
     private readonly FileAppSettingsStore _store = new(FileAppSettingsStore.DefaultDirectory());
     private readonly ToggleSwitch _checkUpdates = new() { OnContent = "On", OffContent = "Off" };
     private readonly ToggleSwitch _crashUpload = new() { OnContent = "On", OffContent = "Off" };
+    private readonly ToggleSwitch _telemetry = new() { OnContent = "On", OffContent = "Off" };
     private readonly ComboBox _preference = new()
     {
         Width = 220,
@@ -242,10 +243,12 @@ public sealed class SettingsPage : ShellPage
         var settings = _store.Load();
         _checkUpdates.IsOn = settings.CheckForUpdatesEnabled;
         _crashUpload.IsOn = settings.CrashReportUploadEnabled;
+        _telemetry.IsOn = settings.TelemetryEnabled;
         _preference.SelectedIndex = settings.UpdatePreference == UpdatePreference.Automatic ? 1 : 0;
 
         _checkUpdates.Toggled += (_, _) => Persist();
         _crashUpload.Toggled += (_, _) => Persist();
+        _telemetry.Toggled += (_, _) => Persist();
         _preference.SelectionChanged += (_, _) => Persist();
 
         var checkBtn = new Button { Content = "Check for updates now", Margin = new Thickness(0, 12, 0, 0) };
@@ -285,6 +288,22 @@ public sealed class SettingsPage : ShellPage
             Opacity = 0.85,
         });
         panel.Children.Add(Labeled("Upload crash dumps", _crashUpload));
+
+        panel.Children.Add(new TextBlock
+        {
+            Text = "Telemetry (opt-in)",
+            Style = Application.Current.Resources["SubtitleTextBlockStyle"] as Style,
+            Margin = new Thickness(0, 16, 0, 0),
+        });
+        panel.Children.Add(new TextBlock
+        {
+            Text =
+                "Off by default. When enabled, Windows Box may send anonymous usage events " +
+                "(feature names only — no file contents). Switch off anytime; offline builds work with this off.",
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.85,
+        });
+        panel.Children.Add(Labeled("Enable telemetry", _telemetry));
         panel.Children.Add(_status);
 
         if (settings.LastUpdateCheckUtc is { } last)
@@ -304,13 +323,15 @@ public sealed class SettingsPage : ShellPage
         var settings = _store.Load();
         settings.CheckForUpdatesEnabled = _checkUpdates.IsOn;
         settings.CrashReportUploadEnabled = _crashUpload.IsOn;
+        settings.TelemetryEnabled = _telemetry.IsOn;
         settings.UpdatePreference = _preference.SelectedIndex == 1
             ? UpdatePreference.Automatic
             : UpdatePreference.Manual;
         _store.Save(settings);
         _status.Text =
             "Saved. Updates: " + (settings.CheckForUpdatesEnabled ? settings.UpdatePreference.ToString() : "off") +
-            ". Crash upload: " + (settings.CrashReportUploadEnabled ? "on" : "off") + ".";
+            ". Crash upload: " + (settings.CrashReportUploadEnabled ? "on" : "off") +
+            ". Telemetry: " + (settings.TelemetryEnabled ? "on" : "off") + ".";
     }
 
     private async Task RunCheckAsync()

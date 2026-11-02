@@ -31,6 +31,12 @@ public sealed class AppSettings
     /// in Settings and is disclosed as contacting the crash endpoint.
     /// </summary>
     public bool CrashReportUploadEnabled { get; set; }
+
+    /// <summary>
+    /// Optional product telemetry. Off by default; switchable in Settings.
+    /// When false, TelemetryClient performs zero network I/O.
+    /// </summary>
+    public bool TelemetryEnabled { get; set; }
 }
 
 public enum UpdatePreference
