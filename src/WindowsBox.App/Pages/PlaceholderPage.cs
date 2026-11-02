@@ -224,6 +224,7 @@ public sealed class SettingsPage : ShellPage
 {
     private readonly FileAppSettingsStore _store = new(FileAppSettingsStore.DefaultDirectory());
     private readonly ToggleSwitch _checkUpdates = new() { OnContent = "On", OffContent = "Off" };
+    private readonly ToggleSwitch _crashUpload = new() { OnContent = "On", OffContent = "Off" };
     private readonly ComboBox _preference = new()
     {
         Width = 220,
@@ -240,9 +241,11 @@ public sealed class SettingsPage : ShellPage
     {
         var settings = _store.Load();
         _checkUpdates.IsOn = settings.CheckForUpdatesEnabled;
+        _crashUpload.IsOn = settings.CrashReportUploadEnabled;
         _preference.SelectedIndex = settings.UpdatePreference == UpdatePreference.Automatic ? 1 : 0;
 
         _checkUpdates.Toggled += (_, _) => Persist();
+        _crashUpload.Toggled += (_, _) => Persist();
         _preference.SelectionChanged += (_, _) => Persist();
 
         var checkBtn = new Button { Content = "Check for updates now", Margin = new Thickness(0, 12, 0, 0) };
@@ -266,6 +269,22 @@ public sealed class SettingsPage : ShellPage
         panel.Children.Add(Labeled("Check for updates", _checkUpdates));
         panel.Children.Add(Labeled("When to check", _preference));
         panel.Children.Add(checkBtn);
+
+        panel.Children.Add(new TextBlock
+        {
+            Text = "Crash reports (opt-in)",
+            Style = Application.Current.Resources["SubtitleTextBlockStyle"] as Style,
+            Margin = new Thickness(0, 16, 0, 0),
+        });
+        panel.Children.Add(new TextBlock
+        {
+            Text =
+                "Crashes are always written locally under %ProgramData%\\WindowsBox\\crashes. " +
+                "Upload is off by default. Turning this on sends the dump to the configured crash endpoint.",
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.85,
+        });
+        panel.Children.Add(Labeled("Upload crash dumps", _crashUpload));
         panel.Children.Add(_status);
 
         if (settings.LastUpdateCheckUtc is { } last)
@@ -274,7 +293,7 @@ public sealed class SettingsPage : ShellPage
         }
         else
         {
-            _status.Text = "No update check has run yet (network idle).";
+            _status.Text = "No update check has run yet (network idle). Crash upload default: off.";
         }
 
         Content = CreateRoot("Settings", "Privacy-first preferences. Network features stay off until you opt in.", panel);
@@ -284,13 +303,14 @@ public sealed class SettingsPage : ShellPage
     {
         var settings = _store.Load();
         settings.CheckForUpdatesEnabled = _checkUpdates.IsOn;
+        settings.CrashReportUploadEnabled = _crashUpload.IsOn;
         settings.UpdatePreference = _preference.SelectedIndex == 1
             ? UpdatePreference.Automatic
             : UpdatePreference.Manual;
         _store.Save(settings);
-        _status.Text = "Saved. " + (settings.CheckForUpdatesEnabled
-            ? "Update checks opted in (" + settings.UpdatePreference + ")."
-            : "Update checks remain off — no network calls.");
+        _status.Text =
+            "Saved. Updates: " + (settings.CheckForUpdatesEnabled ? settings.UpdatePreference.ToString() : "off") +
+            ". Crash upload: " + (settings.CrashReportUploadEnabled ? "on" : "off") + ".";
     }
 
     private async Task RunCheckAsync()

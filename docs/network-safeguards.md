@@ -10,7 +10,7 @@ every network feature turned off. Anything that contacts the network is **opt-in
 |-|-|-|-|
 | Check for updates | **Off** | Settings → Updates | GitHub Releases API (`api.github.com`) only when enabled |
 | Update preference | **Manual** | Settings → Updates | Automatic only checks on open when “Check for updates” is also on; never silent-installs |
-| Crash report upload | **Off** (when present) | Settings → Privacy | Local dumps always; upload only if opted in |
+| Crash report upload | **Off** | Settings → Privacy | Local dumps under `%ProgramData%\WindowsBox\crashes`; upload only if opted in |
 | Optional telemetry | **Off** (when present) | Settings → Privacy | Nothing until enabled |
 | Plugin marketplace fetch | **Off** / in-repo only (when present) | Settings → Plugins | Only allow-listed plugins merged into this repo |
 

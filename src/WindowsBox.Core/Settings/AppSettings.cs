@@ -25,6 +25,12 @@ public sealed class AppSettings
     public DateTimeOffset? LastUpdateCheckUtc { get; set; }
 
     public string? LastSeenReleaseTag { get; set; }
+
+    /// <summary>
+    /// When false (default), crash dumps stay on disk only. Upload requires explicit opt-in
+    /// in Settings and is disclosed as contacting the crash endpoint.
+    /// </summary>
+    public bool CrashReportUploadEnabled { get; set; }
 }
 
 public enum UpdatePreference
