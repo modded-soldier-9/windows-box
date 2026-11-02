@@ -42,11 +42,18 @@ jobs:
           WINDOWSBOX_TIMESTAMP_URL: ${{ secrets.WINDOWSBOX_TIMESTAMP_URL }}
         run: ./build/sign.ps1
 
-      - name: Pack portable ZIP
+      - name: Pack portable ZIP + SHA256 (+ install.ps1)
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force artifacts/dist | Out-Null
-          Compress-Archive -Path artifacts/wbox/*,artifacts/elevator/* -DestinationPath artifacts/dist/WindowsBox-portable-win-x64.zip -Force
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { 'portable' }
+          $zipName = "WindowsBox-$tag-win-x64.zip"
+          $zipPath = "artifacts/dist/$zipName"
+          Compress-Archive -Path artifacts/wbox/*,artifacts/elevator/* -DestinationPath $zipPath -Force
+          $hash = (Get-FileHash -Algorithm SHA256 -Path $zipPath).Hash.ToLowerInvariant()
+          Set-Content -Path "$zipPath.sha256" -Value "$hash  $zipName" -NoNewline
+          Copy-Item install.ps1 artifacts/dist/install.ps1 -Force
+          Write-Host "Packed $zipName sha256=$hash"
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
