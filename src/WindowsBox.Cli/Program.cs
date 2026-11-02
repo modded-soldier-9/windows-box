@@ -8,6 +8,7 @@ using WindowsBox.Core.Engine.Verify;
 using WindowsBox.Core.Install;
 using WindowsBox.Core.Network;
 using WindowsBox.Core.Platform;
+using WindowsBox.Core.Presentation;
 using WindowsBox.Core.Scheduling;
 
 return await WboxApp.RunAsync(args);
@@ -168,13 +169,23 @@ internal static class WboxApp
             dryRun: dryRun,
             confirmHighRisk: confirm);
 
-        Console.WriteLine(dryRun ? "Dry-run journal saved (no mutations)." : "Apply complete.");
-        Console.WriteLine($"Journal: {result.Journal.Id}");
-        Console.WriteLine($"Health: {(result.Health.Passed ? "passed" : "FAILED")}");
-        Console.WriteLine($"Verify: {(result.Verify.Passed ? "passed" : "FAILED")}");
-        if (result.Restore is not null)
+        if (dryRun)
         {
-            Console.WriteLine($"Offline restore kit: {result.Restore.Directory}");
+            var plan = result.Plan ?? pipeline.DetectAndPreview(catalog, profile);
+            Console.WriteLine(DryRunPresenter.Format(plan, result));
+            Console.WriteLine();
+            Console.WriteLine("Dry-run complete — no services mutated.");
+        }
+        else
+        {
+            Console.WriteLine("Apply complete.");
+            Console.WriteLine($"Journal: {result.Journal.Id}");
+            Console.WriteLine($"Health: {(result.Health.Passed ? "passed" : "FAILED")}");
+            Console.WriteLine($"Verify: {(result.Verify.Passed ? "passed" : "FAILED")}");
+            if (result.Restore is not null)
+            {
+                Console.WriteLine($"Offline restore kit: {result.Restore.Directory}");
+            }
         }
 
         return result.Health.Passed && (dryRun || result.Verify.Passed) ? 0 : 4;

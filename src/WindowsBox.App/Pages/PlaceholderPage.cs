@@ -103,11 +103,16 @@ public sealed class ServicesPage : ShellPage
         var previewBtn = new Button { Content = "Preview diff" };
         previewBtn.Click += (_, _) => ShowDemoPreview(profileBox.SelectedItem as string ?? "Balanced");
 
+        var dryRunBtn = new Button { Content = "Dry-run (show changes)" };
+        ToolTipService.SetToolTip(dryRunBtn, "Shows exactly what would change without mutating services. Same as `wbox dry-run`.");
+        dryRunBtn.Click += (_, _) => ShowDemoDryRun(profileBox.SelectedItem as string ?? "Balanced");
+
         var applyBtn = new Button { Content = "Apply (elevated batch)…", IsEnabled = false };
         ToolTipService.SetToolTip(applyBtn, "Apply runs through Elevator after explicit confirm. Disabled until a live preview is selected.");
 
         toolbar.Children.Add(profileBox);
         toolbar.Children.Add(previewBtn);
+        toolbar.Children.Add(dryRunBtn);
         toolbar.Children.Add(applyBtn);
 
         var body = new Grid();
@@ -160,6 +165,15 @@ public sealed class ServicesPage : ShellPage
         _summary.Text = $"{profileName}: {cards.Count} service(s); 2 → Manual; est. −16 MB idle. Confirm risk ≥3 or Disabled before apply.";
         _list.ItemsSource = cards.Select(c =>
             $"{c.RiskLabel,-14}  {c.Subtitle,-16}  {c.Diff,-28}  ~{c.ExpectedGainMb} MB").ToList();
+    }
+
+    private void ShowDemoDryRun(string profileName)
+    {
+        ShowDemoPreview(profileName);
+        _summary.Text =
+            $"Dry-run ({profileName}): planned changes below — no services mutated. " +
+            "CLI: wbox dry-run --profile " + profileName.ToLowerInvariant() + ". " +
+            "Apply stays disabled until you confirm a live preview.";
     }
 }
 
