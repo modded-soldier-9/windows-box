@@ -130,6 +130,7 @@ public sealed class PreviewPlanner
                 continue;
             }
 
+            var gain = EstimateGainMb(current, target);
             changes.Add(new PreviewChange
             {
                 ItemId = entry.Id,
@@ -138,18 +139,21 @@ public sealed class PreviewPlanner
                 Current = current,
                 Target = target,
                 Risk = entry.Risk,
+                ExpectedGainMb = gain,
                 Breaks = entry.Breaks,
                 RequiresConfirm = entry.Risk >= 3 || target == ServiceStartType.Disabled,
                 HonestyLabel = entry.HonestyLabel,
             });
         }
 
+        var totalGain = changes.Sum(c => c.ExpectedGainMb);
         return new PreviewPlan
         {
             Profile = profile,
             Changes = changes,
             Skipped = skipped,
-            EstimatedIdleRamSavedMb = EstimateRam(changes),
+            EstimatedIdleRamSavedMb = totalGain,
+            DiffSummary = BuildDiffSummary(changes, totalGain),
         };
     }
 
@@ -252,18 +256,46 @@ public sealed class PreviewPlanner
         return false;
     }
 
-    private static int EstimateRam(IReadOnlyList<PreviewChange> changes)
+    private static int EstimateGainMb(ServiceStartType current, ServiceStartType target)
     {
-        // Provisional heuristic until ETW measurement lands: ~8 MB per Auto→Manual, ~12 MB Disabled.
-        var total = 0;
-        foreach (var change in changes)
+        // Provisional heuristic until ETW measurement lands.
+        if (current is not (ServiceStartType.Automatic or ServiceStartType.AutomaticDelayed))
         {
-            if (change.Current is ServiceStartType.Automatic or ServiceStartType.AutomaticDelayed)
-            {
-                total += change.Target == ServiceStartType.Disabled ? 12 : 8;
-            }
+            return 0;
         }
 
-        return total;
+        return target == ServiceStartType.Disabled ? 12 : 8;
+    }
+
+    private static string BuildDiffSummary(IReadOnlyList<PreviewChange> changes, int totalGainMb)
+    {
+        if (changes.Count == 0)
+        {
+            return "No changes.";
+        }
+
+        var toManual = changes.Count(c =>
+            c.Target is ServiceStartType.Manual or ServiceStartType.ManualTrigger);
+        var toDisabled = changes.Count(c => c.Target == ServiceStartType.Disabled);
+        var other = changes.Count - toManual - toDisabled;
+
+        var parts = new List<string> { $"{changes.Count} service(s)" };
+        if (toManual > 0)
+        {
+            parts.Add($"{toManual} → Manual");
+        }
+
+        if (toDisabled > 0)
+        {
+            parts.Add($"{toDisabled} → Disabled");
+        }
+
+        if (other > 0)
+        {
+            parts.Add($"{other} other");
+        }
+
+        parts.Add($"est. −{totalGainMb} MB idle");
+        return string.Join("; ", parts);
     }
 }

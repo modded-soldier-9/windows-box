@@ -6,7 +6,7 @@ Inspired by (not copied from) Chris Titus Tech’s WinUtil (MIT) and the wider o
 
 ## Status
 
-**M0 — foundation** (this repo milestone): solution layout, YAML service catalog (~80 entries), Core engine skeleton (detect → preview → snapshot → apply → health → rollback), `wbox` CLI, short-lived Elevator, WinUI 3 shell with placeholder pages, unit tests with fakes, CI.
+**M1 — shared engine** (in progress via stacked PRs): live SCM + registry adapters behind interfaces, preview/plan with risk and expected gain, measured snapshot, apply, verify, rollback, drift detection. Unit tests use fakes only — never mutate a real host. Built on **.NET 10 LTS**.
 
 ## Priorities
 

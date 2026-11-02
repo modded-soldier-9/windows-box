@@ -1,5 +1,9 @@
 using WindowsBox.Core.Catalog;
+using WindowsBox.Core.Catalog.Models;
+using WindowsBox.Core.Engine;
 using WindowsBox.Core.Engine.Journal;
+using WindowsBox.Core.Engine.Restore;
+using WindowsBox.Core.Platform;
 
 return await WboxApp.RunAsync(args);
 
@@ -19,11 +23,14 @@ internal static class WboxApp
             return command switch
             {
                 "catalog" => RunCatalog(args.Skip(1).ToArray()),
-                "preview" => RunPreview(),
+                "preview" => RunPreview(args.Skip(1).ToArray()),
                 "version" => RunVersion(),
-                "apply" => await RunApplyAsync(dryRun: false),
-                "dry-run" => await RunApplyAsync(dryRun: true),
+                "apply" => await RunApplyAsync(args.Skip(1).ToArray(), dryRun: false),
+                "dry-run" => await RunApplyAsync(args.Skip(1).ToArray(), dryRun: true),
                 "rollback" => await RunRollbackAsync(args.Skip(1).ToArray()),
+                "verify" => await RunVerifyAsync(args.Skip(1).ToArray()),
+                "drift" => await RunDriftAsync(args.Skip(1).ToArray()),
+                "journals" => await RunJournalsAsync(args.Skip(1).ToArray()),
                 _ => Unknown(command),
             };
         }
@@ -36,6 +43,12 @@ internal static class WboxApp
             }
 
             return 2;
+        }
+        catch (PlatformNotSupportedException ex)
+        {
+            Console.Error.WriteLine(ex.Message);
+            Console.Error.WriteLine("Live SCM/registry adapters require Windows. Use fakes in unit tests.");
+            return 3;
         }
         catch (Exception ex)
         {
@@ -53,8 +66,8 @@ internal static class WboxApp
 
     private static int RunVersion()
     {
-        Console.WriteLine("wbox 0.0.1-m0");
-        Console.WriteLine("Windows Box — no telemetry, no background service.");
+        Console.WriteLine("wbox 0.1.0-m1-engine");
+        Console.WriteLine("Windows Box — .NET 10 LTS — no telemetry, no background service.");
         return 0;
     }
 
@@ -89,21 +102,75 @@ internal static class WboxApp
         return 0;
     }
 
-    private static int RunPreview()
+    private static int RunPreview(string[] args)
     {
-        Console.WriteLine(
-            "preview requires a live Windows service controller (M1). " +
-            "On this host, use `wbox catalog validate` or unit tests with fakes.");
+        var profile = ParseProfile(GetOption(args, "--profile") ?? "balanced");
+        var catalog = new ServiceCatalogLoader().LoadDirectory(GetOption(args, "--catalog") ?? DefaultCatalogDir());
+        var pipeline = CreatePipeline(GetOption(args, "--journal-dir") ?? DefaultJournalDir());
+        var plan = pipeline.DetectAndPreview(catalog, profile);
+
+        Console.WriteLine($"Profile: {plan.Profile}");
+        Console.WriteLine($"Diff: {plan.DiffSummary}");
+        Console.WriteLine(plan.HonestyNote);
+        Console.WriteLine();
+        foreach (var change in plan.Changes)
+        {
+            Console.WriteLine($"  {change.DiffLine}");
+            if (change.Breaks.Count > 0)
+            {
+                Console.WriteLine($"    breaks: {string.Join("; ", change.Breaks)}");
+            }
+        }
+
+        if (plan.Skipped.Count > 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"Skipped ({plan.Skipped.Count}):");
+            foreach (var skip in plan.Skipped.Take(20))
+            {
+                Console.WriteLine($"  {skip.ServiceName}: {skip.Reason}");
+            }
+
+            if (plan.Skipped.Count > 20)
+            {
+                Console.WriteLine($"  … {plan.Skipped.Count - 20} more");
+            }
+        }
+
         return 0;
     }
 
-    private static Task<int> RunApplyAsync(bool dryRun)
+    private static async Task<int> RunApplyAsync(string[] args, bool dryRun)
     {
-        Console.WriteLine(
-            dryRun
-                ? "dry-run: elevated apply path is stubbed in M0; use unit tests for pipeline coverage."
-                : "apply: launches WindowsBox.Elevator on Windows (stubbed in M0 non-Windows hosts).");
-        return Task.FromResult(0);
+        var profile = ParseProfile(GetOption(args, "--profile") ?? "balanced");
+        var confirm = HasFlag(args, "--confirm");
+        var catalog = new ServiceCatalogLoader().LoadDirectory(GetOption(args, "--catalog") ?? DefaultCatalogDir());
+        var journalDir = GetOption(args, "--journal-dir") ?? DefaultJournalDir();
+        var pipeline = CreatePipeline(journalDir);
+
+        if (!OperatingSystem.IsWindows() && !HasFlag(args, "--allow-non-windows"))
+        {
+            Console.Error.WriteLine(
+                "Refusing to apply on a non-Windows host. Unit tests cover the pipeline with fakes.");
+            return 3;
+        }
+
+        var result = await pipeline.ApplyAsync(
+            catalog,
+            profile,
+            dryRun: dryRun,
+            confirmHighRisk: confirm);
+
+        Console.WriteLine(dryRun ? "Dry-run journal saved (no mutations)." : "Apply complete.");
+        Console.WriteLine($"Journal: {result.Journal.Id}");
+        Console.WriteLine($"Health: {(result.Health.Passed ? "passed" : "FAILED")}");
+        Console.WriteLine($"Verify: {(result.Verify.Passed ? "passed" : "FAILED")}");
+        if (result.Restore is not null)
+        {
+            Console.WriteLine($"Offline restore kit: {result.Restore.Directory}");
+        }
+
+        return result.Health.Passed && (dryRun || result.Verify.Passed) ? 0 : 4;
     }
 
     private static async Task<int> RunRollbackAsync(string[] args)
@@ -115,18 +182,101 @@ internal static class WboxApp
             return 1;
         }
 
-        var root = GetOption(args, "--journal-dir") ?? DefaultJournalDir();
-        var store = new FileJournalStore(root);
-        var journal = await store.LoadAsync(id);
-        if (journal is null)
+        if (!OperatingSystem.IsWindows() && !HasFlag(args, "--allow-non-windows"))
         {
-            Console.Error.WriteLine($"Journal not found: {id}");
-            return 1;
+            Console.Error.WriteLine("Refusing to rollback on a non-Windows host.");
+            return 3;
         }
 
-        Console.WriteLine(
-            $"Loaded journal {journal.Id} with {journal.Entries.Count} entries (rollback via elevator in M1).");
+        var pipeline = CreatePipeline(GetOption(args, "--journal-dir") ?? DefaultJournalDir());
+        var journal = await pipeline.RollbackAsync(id);
+        Console.WriteLine($"Rolled back journal {journal.Id}");
+        foreach (var entry in journal.Entries)
+        {
+            Console.WriteLine($"  {entry.ServiceName}: {entry.Status}{(entry.Error is null ? "" : " — " + entry.Error)}");
+        }
+
         return 0;
+    }
+
+    private static async Task<int> RunVerifyAsync(string[] args)
+    {
+        var quiet = HasFlag(args, "--quiet");
+        var journalDir = GetOption(args, "--journal-dir") ?? DefaultJournalDir();
+        var pipeline = CreatePipeline(journalDir);
+        var store = new FileJournalStore(journalDir);
+
+        var id = args.FirstOrDefault(a => !a.StartsWith('-') && a != "--quiet");
+        if (id is not null)
+        {
+            var journal = await store.LoadAsync(id)
+                          ?? throw new InvalidOperationException($"Journal not found: {id}");
+            var verify = pipeline.VerifyJournal(journal);
+            if (!quiet)
+            {
+                Console.WriteLine($"Verify {verify.JournalId}: {(verify.Passed ? "passed" : "FAILED")}");
+                foreach (var item in verify.Items)
+                {
+                    Console.WriteLine($"  {(item.Passed ? "OK" : "DRIFT")} {item.ServiceName}: {item.Detail}");
+                }
+            }
+
+            return verify.Passed ? 0 : 5;
+        }
+
+        var drift = await pipeline.DetectDriftAsync();
+        if (!quiet)
+        {
+            Console.WriteLine(
+                $"Drift check: {drift.Drifted.Count} drifted, {drift.Missing.Count} missing, {drift.Matched.Count} matched");
+            foreach (var item in drift.Drifted.Concat(drift.Missing))
+            {
+                Console.WriteLine($"  {item.ServiceName}: expected {item.Expected}, actual {item.Actual?.ToString() ?? "missing"} — {item.Reason}");
+            }
+        }
+        else if (drift.HasDrift)
+        {
+            Console.WriteLine($"drift:{drift.Drifted.Count + drift.Missing.Count}");
+        }
+
+        return drift.HasDrift ? 5 : 0;
+    }
+
+    private static async Task<int> RunDriftAsync(string[] args) =>
+        await RunVerifyAsync(args);
+
+    private static async Task<int> RunJournalsAsync(string[] args)
+    {
+        var store = new FileJournalStore(GetOption(args, "--journal-dir") ?? DefaultJournalDir());
+        var list = await store.ListAsync();
+        foreach (var journal in list)
+        {
+            Console.WriteLine($"{journal.Id}  {journal.CreatedAt:u}  {journal.Profile}  entries={journal.Entries.Count}");
+        }
+
+        return 0;
+    }
+
+    private static ApplyPipeline CreatePipeline(string journalDir)
+    {
+        var backupDir = Path.Combine(Path.GetDirectoryName(journalDir.TrimEnd(Path.DirectorySeparatorChar)) ?? journalDir, "backups");
+        return new ApplyPipeline(
+            PlatformAdapters.CreateServiceController(),
+            PlatformAdapters.CreateRegistry(),
+            PlatformAdapters.CreateSystemProbe(),
+            new FileJournalStore(journalDir),
+            restoreKit: new OfflineRestoreKit(backupDir));
+    }
+
+    private static OptimizationProfile ParseProfile(string name)
+    {
+        if (Enum.TryParse<OptimizationProfile>(name, ignoreCase: true, out var profile))
+        {
+            return profile;
+        }
+
+        throw new ArgumentException(
+            $"Unknown profile '{name}'. Expected one of: {string.Join(", ", Enum.GetNames<OptimizationProfile>())}");
     }
 
     private static string DefaultCatalogDir()
@@ -176,6 +326,9 @@ internal static class WboxApp
         return null;
     }
 
+    private static bool HasFlag(string[] args, string name) =>
+        args.Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
+
     private static void PrintHelp()
     {
         Console.WriteLine(
@@ -185,16 +338,20 @@ internal static class WboxApp
             Usage:
               wbox catalog validate [--catalog <dir>]
               wbox catalog list [--catalog <dir>]
-              wbox preview --profile <name>
-              wbox dry-run --profile <name>
-              wbox apply --profile <name>
+              wbox preview --profile <name> [--catalog <dir>]
+              wbox dry-run --profile <name> [--confirm]
+              wbox apply --profile <name> [--confirm]
               wbox rollback <journal-id>
+              wbox verify [--quiet] [<journal-id>]
+              wbox drift [--quiet]
+              wbox journals
               wbox version
 
             Principles:
               - No background service, no phone-home, no tweaks on install
               - Prefer Manual over Disabled
               - Every apply snapshots real prior values for undo
+              - Never run apply/rollback against CI Linux hosts (fakes only)
             """);
     }
 }

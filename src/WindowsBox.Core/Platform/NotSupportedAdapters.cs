@@ -1,27 +1,53 @@
+using System.Runtime.Versioning;
 using WindowsBox.Core.Abstractions;
 using WindowsBox.Core.Catalog.Models;
 
 namespace WindowsBox.Core.Platform;
 
 /// <summary>
-/// Placeholders returned when running off Windows. Real SCM/registry adapters ship in M1.
+/// Factory for platform adapters. Real Windows SCM/registry/probe implementations
+/// are returned on Windows; unsupported stubs elsewhere. Unit tests inject fakes.
 /// </summary>
 public static class PlatformAdapters
 {
-    public static IServiceController CreateServiceController() =>
-        OperatingSystem.IsWindows()
-            ? throw new NotImplementedException("Windows SCM adapter lands in M1; use fakes in tests.")
-            : new UnsupportedServiceController();
+    public static IServiceController CreateServiceController()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return CreateWindowsServiceController();
+        }
 
-    public static IRegistry CreateRegistry() =>
-        OperatingSystem.IsWindows()
-            ? throw new NotImplementedException("Windows registry adapter lands in M1; use fakes in tests.")
-            : new UnsupportedRegistry();
+        return new UnsupportedServiceController();
+    }
 
-    public static ISystemProbe CreateSystemProbe() =>
-        OperatingSystem.IsWindows()
-            ? throw new NotImplementedException("Windows system probe lands in M1; use fakes in tests.")
-            : new UnsupportedSystemProbe();
+    public static IRegistry CreateRegistry()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return CreateWindowsRegistry();
+        }
+
+        return new UnsupportedRegistry();
+    }
+
+    public static ISystemProbe CreateSystemProbe()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return CreateWindowsSystemProbe();
+        }
+
+        return new UnsupportedSystemProbe();
+    }
+
+    [SupportedOSPlatform("windows")]
+    private static IServiceController CreateWindowsServiceController() => new WindowsServiceController();
+
+    [SupportedOSPlatform("windows")]
+    private static IRegistry CreateWindowsRegistry() => new WindowsRegistryAdapter();
+
+    [SupportedOSPlatform("windows")]
+    private static ISystemProbe CreateWindowsSystemProbe() => new WindowsSystemProbe();
 }
 
 file sealed class UnsupportedServiceController : IServiceController

@@ -25,12 +25,13 @@ Windows Box is a **zero-footprint** Windows 11 manager: the UI and CLI are thin 
 
 ## Apply pipeline
 
-1. **Detect** — probe edition/build, hardware, roles (MDM, domain, Xbox, printers, BT, battery, features).
-2. **Preview** — resolve profile → candidates → gates → dependency check → diff (current → target).
-3. **Snapshot** — journal real prior start type, delayed flag, triggers, running state, plus `reg export` of each service key. Optional restore point (with consent) comes later.
-4. **Apply** — Elevator calls SCM (`ChangeServiceConfig` / `ChangeServiceConfig2`). Running services are not stopped unless asked (“takes effect after reboot”).
-5. **Health check** — re-read critical services; richer post-reboot checks are opt-in one-shots (no resident agent).
-6. **Rollback** — replay journal priors; offline `.reg`/`.cmd` kit under `%ProgramData%\WindowsBox` (M1).
+1. **Detect** — `ISystemProbe` (live `WindowsSystemProbe` on Windows; fakes in tests).
+2. **Preview** — resolve profile → candidates → gates → dependency check → diff (current → target, risk 0–4, expected gain MB).
+3. **Snapshot** — journal real prior start type, delayed flag, triggers, running state, plus `reg export` of each service key. Offline restore kit (`.reg`/`.cmd`) written under `%ProgramData%\WindowsBox\backups`.
+4. **Apply** — `IServiceController` (`WindowsServiceController` via SCM P/Invoke). Elevator wraps elevation for batches. Running services are not stopped unless asked.
+5. **Verify** — `ApplyVerifier` confirms journal targets stuck; `DriftDetector` on app open / `wbox verify` catches Windows Update reverts.
+6. **Health check** — re-read critical services; richer post-reboot checks are opt-in one-shots (no resident agent).
+7. **Rollback** — replay measured journal priors (never assumed Microsoft defaults).
 
 ## Catalogs
 

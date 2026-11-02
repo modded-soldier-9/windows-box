@@ -1,8 +1,11 @@
 using WindowsBox.Core.Abstractions;
 using WindowsBox.Core.Catalog.Models;
+using WindowsBox.Core.Engine.Drift;
 using WindowsBox.Core.Engine.Health;
 using WindowsBox.Core.Engine.Journal;
 using WindowsBox.Core.Engine.Preview;
+using WindowsBox.Core.Engine.Restore;
+using WindowsBox.Core.Engine.Verify;
 
 namespace WindowsBox.Core.Engine;
 
@@ -14,13 +17,17 @@ public sealed class ApplyPipeline
     private readonly IJournalStore _journals;
     private readonly IHealthChecker _health;
     private readonly PreviewPlanner _planner;
+    private readonly ApplyVerifier _verifier;
+    private readonly DriftDetector _drift;
+    private readonly OfflineRestoreKit? _restoreKit;
 
     public ApplyPipeline(
         IServiceController services,
         IRegistry registry,
         ISystemProbe probe,
         IJournalStore journals,
-        IHealthChecker? health = null)
+        IHealthChecker? health = null,
+        OfflineRestoreKit? restoreKit = null)
     {
         _services = services;
         _registry = registry;
@@ -28,6 +35,9 @@ public sealed class ApplyPipeline
         _journals = journals;
         _health = health ?? new BasicHealthChecker(services);
         _planner = new PreviewPlanner(services, probe);
+        _verifier = new ApplyVerifier(services);
+        _drift = new DriftDetector(services);
+        _restoreKit = restoreKit;
     }
 
     public PreviewPlan DetectAndPreview(CatalogDocument catalog, OptimizationProfile profile) =>
@@ -104,6 +114,12 @@ public sealed class ApplyPipeline
         // Snapshot first — undo must survive crash/cancel during apply.
         await _journals.SaveAsync(journal, cancellationToken);
 
+        OfflineRestoreArtifacts? restore = null;
+        if (!dryRun && _restoreKit is not null)
+        {
+            restore = _restoreKit.Write(journal);
+        }
+
         if (dryRun)
         {
             foreach (var entry in entries)
@@ -117,6 +133,9 @@ public sealed class ApplyPipeline
                 Journal = journal,
                 DryRun = true,
                 Health = _health.Run(),
+                Verify = _verifier.Verify(journal),
+                Restore = restore,
+                Plan = plan,
             };
         }
 
@@ -146,12 +165,16 @@ public sealed class ApplyPipeline
         }
 
         var health = _health.Run();
+        var verify = _verifier.Verify(journal);
 
         return new ApplyResult
         {
             Journal = journal,
             DryRun = false,
             Health = health,
+            Verify = verify,
+            Restore = restore,
+            Plan = plan,
         };
     }
 
@@ -200,6 +223,14 @@ public sealed class ApplyPipeline
         return journal;
     }
 
+    public VerifyResult VerifyJournal(ApplyJournal journal) => _verifier.Verify(journal);
+
+    public async Task<DriftReport> DetectDriftAsync(CancellationToken cancellationToken = default)
+    {
+        var journals = await _journals.ListAsync(cancellationToken);
+        return _drift.Inspect(journals);
+    }
+
     private static ServiceStartType Normalize(ServiceConfig live)
     {
         if (live.StartType == ServiceStartType.Automatic && live.DelayedAutostart)
@@ -223,4 +254,10 @@ public sealed class ApplyResult
     public bool DryRun { get; init; }
 
     public required HealthCheckResult Health { get; init; }
+
+    public required VerifyResult Verify { get; init; }
+
+    public OfflineRestoreArtifacts? Restore { get; init; }
+
+    public PreviewPlan? Plan { get; init; }
 }
