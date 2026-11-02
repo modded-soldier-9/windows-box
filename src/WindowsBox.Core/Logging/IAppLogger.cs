@@ -6,15 +6,15 @@ public interface IAppLogger
 
     void Log(LogLevel level, string message);
 
-    void Trace(string message) => Log(LogLevel.Trace, message);
+    void Trace(string message);
 
-    void Debug(string message) => Log(LogLevel.Debug, message);
+    void Debug(string message);
 
-    void Info(string message) => Log(LogLevel.Info, message);
+    void Info(string message);
 
-    void Warning(string message) => Log(LogLevel.Warning, message);
+    void Warning(string message);
 
-    void Error(string message) => Log(LogLevel.Error, message);
+    void Error(string message);
 }
 
 /// <summary>
@@ -47,6 +47,16 @@ public sealed class FileAppLogger : IAppLogger
             }
         }
     }
+
+    public void Trace(string message) => Log(LogLevel.Trace, message);
+
+    public void Debug(string message) => Log(LogLevel.Debug, message);
+
+    public void Info(string message) => Log(LogLevel.Info, message);
+
+    public void Warning(string message) => Log(LogLevel.Warning, message);
+
+    public void Error(string message) => Log(LogLevel.Error, message);
 
     public void Log(LogLevel level, string message)
     {
