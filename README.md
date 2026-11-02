@@ -63,6 +63,7 @@ wbox netcheck
 | [docs/wiki/](docs/wiki/) | Wiki source (architecture, engine, modules, catalog) |
 | [docs/signing.md](docs/signing.md) | What Ron must supply for Authenticode |
 | [docs/network-safeguards.md](docs/network-safeguards.md) | Network features: opt-in, off by default |
+| [docs/trust-guide.md](docs/trust-guide.md) | Inspect `install.ps1` before `irm \| iex` |
 | [CONTRIBUTING.md](CONTRIBUTING.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) | Community |
 | [docs/research/](docs/research/) | Fact-checked landscape (kept in-repo) |
 

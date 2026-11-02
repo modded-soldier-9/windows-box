@@ -62,4 +62,4 @@ Removes `\WindowsBox\Verify` and known registry keys. See the script header for 
 
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — engine layers
 - [MASTER-PLAN.md](MASTER-PLAN.md) — roadmap source of truth
-- [trust-guide.md](trust-guide.md) — one-line installer inspection (when published)
+- [trust-guide.md](trust-guide.md) — one-line installer inspection (`install.ps1`)
