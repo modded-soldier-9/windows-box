@@ -12,7 +12,9 @@
             PaneDisplayMode="Left"
             IsSettingsVisible="False"
             IsBackButtonVisible="Collapsed"
-            OpenPaneLength="220"
+            IsPaneToggleButtonVisible="True"
+            OpenPaneLength="240"
+            CompactPaneLength="48"
             SelectionChanged="RootNav_SelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Home" Tag="home" Icon="Home" />
@@ -23,6 +25,13 @@
                 <NavigationViewItem Content="Tweaks" Tag="tweaks" Icon="Edit" />
                 <NavigationViewItem Content="History" Tag="history" Icon="Clock" />
             </NavigationView.MenuItems>
+            <NavigationView.PaneFooter>
+                <TextBlock
+                    Margin="16,8"
+                    Opacity="0.55"
+                    FontSize="11"
+                    Text="Zero footprint · MIT · no phone-home" />
+            </NavigationView.PaneFooter>
             <Frame x:Name="ContentFrame" />
         </NavigationView>
     </Grid>

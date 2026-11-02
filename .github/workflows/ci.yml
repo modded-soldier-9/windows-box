@@ -107,6 +107,18 @@ jobs:
         shell: pwsh
         run: ./artifacts/elevator/WindowsBox.Elevator.exe --ping
 
+      - name: Offline sign (placeholder secrets)
+        shell: pwsh
+        env:
+          WINDOWSBOX_CERT_PFX_PATH: ${{ secrets.WINDOWSBOX_CERT_PFX_PATH }}
+          WINDOWSBOX_CERT_PASSWORD: ${{ secrets.WINDOWSBOX_CERT_PASSWORD }}
+          WINDOWSBOX_TIMESTAMP_URL: ${{ secrets.WINDOWSBOX_TIMESTAMP_URL }}
+        run: ./build/sign.ps1
+
+      - name: WPF fallback gate
+        shell: pwsh
+        run: ./build/wpf-fallback-gate.ps1 -MetricsPath artifacts/perf/winui-metrics.json
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4

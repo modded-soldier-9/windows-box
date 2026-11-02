@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build artifacts without creating a GitHub Release"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+
+jobs:
+  build-signed:
+    name: Build portable ZIP (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Publish AOT CLI + Elevator
+        run: |
+          dotnet publish src/WindowsBox.Cli/WindowsBox.Cli.csproj -c Release -r win-x64 -o artifacts/wbox
+          dotnet publish src/WindowsBox.Elevator/WindowsBox.Elevator.csproj -c Release -r win-x64 -o artifacts/elevator
+
+      - name: Offline sign (placeholder secrets)
+        shell: pwsh
+        env:
+          WINDOWSBOX_CERT_PFX_PATH: ${{ secrets.WINDOWSBOX_CERT_PFX_PATH }}
+          WINDOWSBOX_CERT_PASSWORD: ${{ secrets.WINDOWSBOX_CERT_PASSWORD }}
+          WINDOWSBOX_TIMESTAMP_URL: ${{ secrets.WINDOWSBOX_TIMESTAMP_URL }}
+        run: ./build/sign.ps1
+
+      - name: Pack portable ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/dist | Out-Null
+          Compress-Archive -Path artifacts/wbox/*,artifacts/elevator/* -DestinationPath artifacts/dist/WindowsBox-portable-win-x64.zip -Force
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: windowsbox-portable
+          path: artifacts/dist/*
+
+      - name: GitHub Release
+        if: startsWith(github.ref, 'refs/tags/') && github.event_name != 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/dist/*
+          generate_release_notes: true
+          draft: true

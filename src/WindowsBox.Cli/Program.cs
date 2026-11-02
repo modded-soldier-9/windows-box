@@ -5,6 +5,7 @@ using WindowsBox.Core.Engine.Journal;
 using WindowsBox.Core.Engine.Restore;
 using WindowsBox.Core.Engine.Undo;
 using WindowsBox.Core.Engine.Verify;
+using WindowsBox.Core.Network;
 using WindowsBox.Core.Platform;
 
 return await WboxApp.RunAsync(args);
@@ -33,6 +34,7 @@ internal static class WboxApp
                 "verify" => await RunVerifyAsync(args.Skip(1).ToArray()),
                 "drift" => await RunDriftAsync(args.Skip(1).ToArray()),
                 "journals" => await RunJournalsAsync(args.Skip(1).ToArray()),
+                "netcheck" => RunNetCheck(args.Skip(1).ToArray()),
                 _ => Unknown(command),
             };
         }
@@ -338,6 +340,19 @@ internal static class WboxApp
     private static bool HasFlag(string[] args, string name) =>
         args.Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
 
+
+    private static int RunNetCheck(string[] args)
+    {
+        var module = new NetworkPrivacyModule();
+        var report = module.Run(new NetworkPrivacyOptions
+        {
+            IncludeLoopback = HasFlag(args, "--loopback"),
+            ResolveRemoteHostNames = HasFlag(args, "--resolve"),
+        });
+        Console.WriteLine(module.FormatPlainText(report));
+        return 0;
+    }
+
     private static void PrintHelp()
     {
         Console.WriteLine(
@@ -353,6 +368,7 @@ internal static class WboxApp
               wbox rollback <journal-id>
               wbox verify [--quiet] [<journal-id>]
               wbox drift [--quiet]
+              wbox netcheck [--resolve] [--loopback]
               wbox journals
               wbox version
 
