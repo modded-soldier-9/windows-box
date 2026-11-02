@@ -8,7 +8,7 @@ using WindowsBox.Core.Platform;
 
 /// <summary>
 /// Short-lived elevated helper. Launched per apply/rollback batch via UAC, exits when done.
-/// Never phones home. Never stays resident.
+/// Never phones home. Never stays resident. AOT-friendly JSON via source generation.
 /// </summary>
 return ElevatorHost.Run(args);
 
@@ -154,7 +154,7 @@ internal static class ElevatorHost
         }
 
         using var stream = File.OpenRead(path);
-        var journal = JsonSerializer.Deserialize<ApplyJournal>(stream, JsonOptions)
+        var journal = JsonSerializer.Deserialize(stream, ElevatorJsonContext.Default.ApplyJournal)
                       ?? throw new InvalidOperationException("Invalid journal JSON.");
 
         if (!OperatingSystem.IsWindows())
@@ -209,11 +209,6 @@ internal static class ElevatorHost
 
     private static bool IsElevated()
     {
-<<<<<<< HEAD
-        // Real WindowsIdentity check arrives with the Windows SCM adapter (M1).
-        // Keeping this TFM portable so Linux CI can compile/publish the helper host.
-        return false;
-=======
         if (!OperatingSystem.IsWindows())
         {
             return false;
@@ -222,7 +217,6 @@ internal static class ElevatorHost
         using var identity = WindowsIdentity.GetCurrent();
         var principal = new WindowsPrincipal(identity);
         return principal.IsInRole(WindowsBuiltInRole.Administrator);
->>>>>>> 374c93b (feat(elevator): elevate only for a batch, then exit)
     }
 
     private static int Fail(string message)
@@ -275,6 +269,11 @@ internal sealed class ElevatorResponse
 [JsonSerializable(typeof(ElevatorChange))]
 [JsonSerializable(typeof(ElevatorResponse))]
 [JsonSerializable(typeof(List<ElevatorChange>))]
+[JsonSerializable(typeof(ApplyJournal))]
+[JsonSerializable(typeof(JournalEntry))]
+[JsonSerializable(typeof(List<JournalEntry>))]
+[JsonSerializable(typeof(ServiceStartType))]
+[JsonSerializable(typeof(JournalEntryStatus))]
 internal partial class ElevatorJsonContext : JsonSerializerContext
 {
 }
