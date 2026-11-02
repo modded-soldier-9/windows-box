@@ -29,8 +29,9 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
-      - name: Publish AOT CLI + Elevator
+      - name: Publish WinUI App + AOT CLI + Elevator
         run: |
+          dotnet publish src/WindowsBox.App/WindowsBox.App.csproj -c Release -r win-x64 --self-contained true -o artifacts/app
           dotnet publish src/WindowsBox.Cli/WindowsBox.Cli.csproj -c Release -r win-x64 -o artifacts/wbox
           dotnet publish src/WindowsBox.Elevator/WindowsBox.Elevator.csproj -c Release -r win-x64 -o artifacts/elevator
 
@@ -45,15 +46,9 @@ jobs:
       - name: Pack portable ZIP + SHA256 (+ install.ps1)
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force artifacts/dist | Out-Null
           $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { 'portable' }
-          $zipName = "WindowsBox-$tag-win-x64.zip"
-          $zipPath = "artifacts/dist/$zipName"
-          Compress-Archive -Path artifacts/wbox/*,artifacts/elevator/* -DestinationPath $zipPath -Force
-          $hash = (Get-FileHash -Algorithm SHA256 -Path $zipPath).Hash.ToLowerInvariant()
-          Set-Content -Path "$zipPath.sha256" -Value "$hash  $zipName" -NoNewline
+          ./build/pack-portable.ps1 -Tag $tag
           Copy-Item install.ps1 artifacts/dist/install.ps1 -Force
-          Write-Host "Packed $zipName sha256=$hash"
 
       - name: Upload dist
         uses: actions/upload-artifact@v4

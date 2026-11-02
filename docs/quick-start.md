@@ -32,6 +32,9 @@ wbox rollback <journal-id>
 
 ## App (WinUI)
 
+From a GitHub Release ZIP (or after `install.ps1`), launch **`WindowsBox.App.exe`**.
+The portable archive also includes `wbox.exe`, `WindowsBox.Elevator.exe`, and `catalog/`.
+
 1. Open Windows Box.
 2. Use **Services** → Preview diff before applying.
 3. Open **Settings** — leave network toggles **off** unless you intentionally opt in.

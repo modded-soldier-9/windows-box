@@ -12,6 +12,7 @@ param(
     [string]$CertPassword = $env:WINDOWSBOX_CERT_PASSWORD,
     [string]$TimestampUrl = $(if ($env:WINDOWSBOX_TIMESTAMP_URL) { $env:WINDOWSBOX_TIMESTAMP_URL } else { "" }),
     [string[]]$Paths = @(
+        "artifacts/app/WindowsBox.App.exe",
         "artifacts/wbox/wbox.exe",
         "artifacts/elevator/WindowsBox.Elevator.exe"
     )
