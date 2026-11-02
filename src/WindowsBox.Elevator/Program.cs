@@ -9,12 +9,6 @@ return ElevatorHost.Run(args);
 
 internal static class ElevatorHost
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-    };
-
     public static int Run(string[] args)
     {
         if (args.Length == 0 || args[0] is "-h" or "--help")
@@ -79,7 +73,7 @@ internal static class ElevatorHost
         }
 
         using var stream = File.OpenRead(path);
-        var plan = JsonSerializer.Deserialize<ElevatorPlan>(stream, JsonOptions)
+        var plan = JsonSerializer.Deserialize(stream, ElevatorJsonContext.Default.ElevatorPlan)
                    ?? throw new InvalidOperationException("Invalid plan JSON.");
 
         // M0 stub: acknowledge without mutating the host.
@@ -113,7 +107,7 @@ internal static class ElevatorHost
     private static bool IsElevated()
     {
         // Real WindowsIdentity check arrives with the Windows SCM adapter (M1).
-        // Keeping this TFM net9.0 so Linux CI can compile the helper host.
+        // Keeping this TFM portable so Linux CI can compile/publish the helper host.
         return false;
     }
 
@@ -125,7 +119,7 @@ internal static class ElevatorHost
 
     private static void Write(ElevatorResponse response)
     {
-        Console.WriteLine(JsonSerializer.Serialize(response, JsonOptions));
+        Console.WriteLine(JsonSerializer.Serialize(response, ElevatorJsonContext.Default.ElevatorResponse));
     }
 }
 
@@ -156,4 +150,15 @@ internal sealed class ElevatorResponse
     public int Applied { get; set; }
 
     public int Skipped { get; set; }
+}
+
+[JsonSourceGenerationOptions(
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    UseStringEnumConverter = true)]
+[JsonSerializable(typeof(ElevatorPlan))]
+[JsonSerializable(typeof(ElevatorChange))]
+[JsonSerializable(typeof(ElevatorResponse))]
+[JsonSerializable(typeof(List<ElevatorChange>))]
+internal partial class ElevatorJsonContext : JsonSerializerContext
+{
 }

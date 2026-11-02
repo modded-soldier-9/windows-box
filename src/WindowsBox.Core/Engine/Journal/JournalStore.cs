@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace WindowsBox.Core.Engine.Journal;
@@ -15,13 +14,6 @@ public interface IJournalStore
 
 public sealed partial class FileJournalStore : IJournalStore
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-    };
-
     private readonly string _root;
 
     public FileJournalStore(string rootDirectory)
@@ -37,7 +29,11 @@ public sealed partial class FileJournalStore : IJournalStore
 
         await using (var stream = File.Create(tempPath))
         {
-            await JsonSerializer.SerializeAsync(stream, journal, JsonOptions, cancellationToken);
+            await JsonSerializer.SerializeAsync(
+                stream,
+                journal,
+                JournalJsonContext.Default.ApplyJournal,
+                cancellationToken);
             await stream.FlushAsync(cancellationToken);
         }
 
@@ -53,7 +49,10 @@ public sealed partial class FileJournalStore : IJournalStore
         }
 
         await using var stream = File.OpenRead(path);
-        return await JsonSerializer.DeserializeAsync<ApplyJournal>(stream, JsonOptions, cancellationToken);
+        return await JsonSerializer.DeserializeAsync(
+            stream,
+            JournalJsonContext.Default.ApplyJournal,
+            cancellationToken);
     }
 
     public async Task<IReadOnlyList<ApplyJournal>> ListAsync(CancellationToken cancellationToken = default)
@@ -63,7 +62,10 @@ public sealed partial class FileJournalStore : IJournalStore
         {
             cancellationToken.ThrowIfCancellationRequested();
             await using var stream = File.OpenRead(file);
-            var journal = await JsonSerializer.DeserializeAsync<ApplyJournal>(stream, JsonOptions, cancellationToken);
+            var journal = await JsonSerializer.DeserializeAsync(
+                stream,
+                JournalJsonContext.Default.ApplyJournal,
+                cancellationToken);
             if (journal is not null)
             {
                 list.Add(journal);

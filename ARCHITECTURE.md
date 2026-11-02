@@ -39,6 +39,12 @@ Windows Box is a **zero-footprint** Windows 11 manager: the UI and CLI are thin 
 - Loader + validator in Core; `wbox catalog validate` in CI.
 - Principles encoded in data: `touch_policy`, risk 0–4, Manual-before-Disabled, sources required.
 
+## Runtime / packaging
+
+- Target framework: **.NET 10 LTS** (`net10.0`; App uses `net10.0-windows10.0.22621.0`).
+- WinUI shell: Windows App SDK **1.8**.
+- `wbox` CLI and Elevator publish with **Native AOT** (fast cold start, no .NET runtime install for those tools).
+
 ## Elevation model
 
 - App/CLI run as the user.

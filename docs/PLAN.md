@@ -29,7 +29,7 @@ The one Windows 11 manager people trust: explains every change, measures the rea
 10. Enterprise/MDM detection → advisory read-only mode; policy-based, never fights protected services.
 
 ## Architecture / stack
-C# .NET 9 + **WinUI 3** (Windows App SDK), unpackaged self-contained + MSIX + winget. Layers: `WindowsBox.Core` (catalog loader, planner, journal, providers: Service/Registry/Task/Appx/Feature/Package) → `wbox` CLI → WinUI shell (MVVM, CommunityToolkit). Short-lived elevated helper per apply batch. Catalogs as schema-validated YAML in repo. CI: VM matrix Home/Pro/Ent × 23H2/24H2/25H2 verifying apply→undo round-trips and harvesting service defaults. Licence: MIT; reuse only MIT/Apache data with notices; GPL (Optimizer, Atlas) and CC-BY-SA (ReviOS) are reading-only. Fallback stack: WPF + WPF-UI. Details: `../windows-box-landscape/stack.md`.
+C# .NET 10 LTS + **WinUI 3** (Windows App SDK 1.8), unpackaged self-contained + MSIX + winget; Native AOT for `wbox` CLI and Elevator. Layers: `WindowsBox.Core` (catalog loader, planner, journal, providers: Service/Registry/Task/Appx/Feature/Package) → `wbox` CLI → WinUI shell (MVVM, CommunityToolkit). Short-lived elevated helper per apply batch. Catalogs as schema-validated YAML in repo. CI: VM matrix Home/Pro/Ent × 23H2/24H2/25H2 verifying apply→undo round-trips and harvesting service defaults. Licence: MIT; reuse only MIT/Apache data with notices; GPL (Optimizer, Atlas) and CC-BY-SA (ReviOS) are reading-only. Fallback stack: WPF + WPF-UI. Details: `../windows-box-landscape/stack.md`.
 
 ## MVP scope & milestones
 - **M0 (2 wks)** Repo, schema, Core skeleton, journal format, VM harness that dumps service defaults per build.
