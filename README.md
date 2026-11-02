@@ -36,6 +36,8 @@ Inspired by Chris Titus Tech’s [WinUtil](https://github.com/ChrisTitusTech/win
 
 ## Quick start
 
+Full walkthrough: **[docs/quick-start.md](docs/quick-start.md)**.
+
 ```bash
 dotnet test tests/WindowsBox.Tests/WindowsBox.Tests.csproj
 dotnet run --project src/WindowsBox.Cli -- catalog validate --catalog catalog/services
@@ -55,6 +57,7 @@ wbox netcheck
 
 | Doc | Why |
 |-|-|
+| [docs/quick-start.md](docs/quick-start.md) | First-run guide (offline-first) |
 | [MASTER-PLAN.md](docs/MASTER-PLAN.md) | Source of truth |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Layers & pipeline |
 | [docs/wiki/](docs/wiki/) | Wiki source (architecture, engine, modules, catalog) |
